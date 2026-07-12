@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact — Young Medical Engineers</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Archivo:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-room="contact" data-root="./">
+
+  <div class="shutter" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="top">
+    <a class="brand" href="index.html"><img src="assets/logo-mark.png" alt="YME"><span>Young Medical Engineers</span></a>
+    <nav aria-label="Site">
+      <a href="mission.html">Mission</a>
+      <a href="about.html">About</a>
+      <a href="programs.html">Programs</a>
+      <a href="impact.html">Impact</a>
+      <a href="board.html">Board</a>
+      <a href="tutoring.html">Tutoring</a>
+      <a href="volunteer.html">Volunteer</a>
+      <a href="donate.html">Donate</a>
+      <a href="contact.html" aria-current="page">Contact</a>
+    </nav>
+  </header>
+
+  <main class="stage">
+    <div class="measure cols c2">
+      <div>
+        <p class="kicker">Contact</p>
+        <h1>The door is <em>open</em>.</h1>
+        <p class="lede">
+          Teachers, parents, students, engineers, librarians — if you'd like a
+          demo day, a tutoring match, a partnership, or simply to ask a question,
+          write to <a href="mailto:youngmedicalengineers@gmail.com">youngmedicalengineers@gmail.com</a>
+          or find us on <a href="https://www.instagram.com/ym_engineers" target="_blank" rel="noopener">Instagram @ym_engineers</a>.
+        </p>
+
+        <dl class="faq rule-top" style="margin-top:2rem">
+          <dt>Is tutoring really free?</dt>
+          <dd>Yes — every program is free, always. That's the founding promise.</dd>
+          <dt>Who are the tutors?</dt>
+          <dd>Volunteer undergraduate and graduate students of medical and
+          biomedical engineering, plus practicing engineers for our speaker series.</dd>
+          <dt>Where do you operate?</dt>
+          <dd>Tutoring is online everywhere; labs and demo days run in person
+          where our volunteers are, and virtually with mailed kits anywhere.</dd>
+        </dl>
+      </div>
+
+      <div>
+        <form class="js-form" data-subject="Contact form">
+          <div class="fgrid">
+            <div class="field">
+              <label for="c-name">Name</label>
+              <input id="c-name" name="Name" type="text" placeholder="Full name" required>
+            </div>
+            <div class="field">
+              <label for="c-email">Email</label>
+              <input id="c-email" name="Email" type="email" placeholder="you@example.com" required>
+            </div>
+          </div>
+          <div class="field">
+            <label for="c-topic">Topic</label>
+            <select id="c-topic" name="Topic" required>
+              <option value="" selected disabled>Choose…</option>
+              <option>Request a classroom demo</option>
+              <option>Tutoring question</option>
+              <option>Volunteering</option>
+              <option>Donations &amp; partnerships</option>
+              <option>Something else</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="c-msg">Message</label>
+            <textarea id="c-msg" name="Message" placeholder="Tell us what you have in mind…" required></textarea>
+          </div>
+          <div class="actions" style="margin-top:.4rem">
+            <button class="btn" type="submit">Send</button>
+            <span class="form-note">All fields are required.</span>
+          </div>
+          <p class="form-err">Something went wrong sending your message — please email
+            <a href="mailto:youngmedicalengineers@gmail.com">youngmedicalengineers@gmail.com</a> directly.</p>
+        </form>
+        <div class="form-done" role="status">
+          <h3>Message received.</h3>
+          <p>Thank you for knocking. We read everything and reply as quickly
+          as a small volunteer team can — usually within a few days.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="foot">
+    <div><a href="mailto:youngmedicalengineers@gmail.com">youngmedicalengineers@gmail.com</a><span class="sep">·</span><a class="ig" href="https://www.instagram.com/ym_engineers" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="1.2" fill="currentColor" stroke="none"/></svg>@ym_engineers</a></div>
+    <a class="next" href="index.html">Return — Home <span class="arrow">&#10230;</span></a>
+  </footer>
+
+  <script src="assets/site.js"></script>
+</body>
+</html>

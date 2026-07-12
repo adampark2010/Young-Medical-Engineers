@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Volunteer — Young Medical Engineers</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Archivo:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-room="volunteer" data-root="./">
+
+  <div class="shutter" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="top">
+    <a class="brand" href="index.html"><img src="assets/logo-mark.png" alt="YME"><span>Young Medical Engineers</span></a>
+    <nav aria-label="Site">
+      <a href="mission.html">Mission</a>
+      <a href="about.html">About</a>
+      <a href="programs.html">Programs</a>
+      <a href="impact.html">Impact</a>
+      <a href="board.html">Board</a>
+      <a href="tutoring.html">Tutoring</a>
+      <a href="volunteer.html" aria-current="page">Volunteer</a>
+      <a href="donate.html">Donate</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main class="stage">
+    <div class="measure cols c2">
+      <div>
+        <p class="kicker">Become a tutor</p>
+        <h1>An hour of your week can redraw a student's <em>ceiling</em>.</h1>
+        <p class="lede">
+          If you study medical or biomedical engineering — or teach the sciences
+          that lead there — we'd love your hands on the bench.
+        </p>
+        <p class="lede" style="margin-top:1.1rem">
+          We recruit from undergraduate and graduate programs and local
+          <strong>BMES chapters</strong>. Tutors set their own availability;
+          we handle matching and scheduling.
+        </p>
+      </div>
+
+      <div>
+        <form class="js-form" data-subject="Volunteer application">
+          <div class="fgrid">
+            <div class="field">
+              <label for="t-name">Name</label>
+              <input id="t-name" name="Name" type="text" placeholder="Full name" required>
+            </div>
+            <div class="field">
+              <label for="t-email">Email</label>
+              <input id="t-email" name="Email" type="email" placeholder="you@university.edu" required>
+            </div>
+            <div class="field">
+              <label for="t-inst">Institution / program</label>
+              <input id="t-inst" name="Institution" type="text" placeholder="School &amp; field of study" required>
+            </div>
+            <div class="field">
+              <label for="t-avail">Availability</label>
+              <select id="t-avail" name="Availability" required>
+                <option value="" selected disabled>Choose…</option>
+                <option>1 hour / week</option>
+                <option>2–3 hours / week</option>
+                <option>4+ hours / week</option>
+                <option>Occasional — demo days &amp; events</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="t-subjects">Subjects you can teach</label>
+            <textarea id="t-subjects" name="Subjects" placeholder="e.g. AP Physics, calculus, biomaterials, EKG lab…" required></textarea>
+          </div>
+          <div class="actions" style="margin-top:.4rem">
+            <button class="btn" type="submit">Apply to volunteer</button>
+            <span class="form-note">All fields are required.</span>
+          </div>
+          <p class="form-err">Something went wrong sending your application — please email
+            <a href="mailto:youngmedicalengineers@gmail.com">youngmedicalengineers@gmail.com</a> directly.</p>
+        </form>
+        <div class="form-done" role="status">
+          <h3>Application received.</h3>
+          <p>Thank you. We'll reach out with a short orientation and your first
+          match — usually within the week.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="foot">
+    <div><a href="mailto:youngmedicalengineers@gmail.com">youngmedicalengineers@gmail.com</a><span class="sep">·</span><a class="ig" href="https://www.instagram.com/ym_engineers" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="1.2" fill="currentColor" stroke="none"/></svg>@ym_engineers</a></div>
+    <a class="next" href="donate.html">Next — Donate <span class="arrow">&#10230;</span></a>
+  </footer>
+
+  <script src="assets/site.js"></script>
+</body>
+</html>
