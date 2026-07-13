@@ -444,16 +444,20 @@ a.corner:hover{ color:var(--ink); }
   .ekg{ display:none; }
 
   /* toolbar: one slim row, swipes sideways */
-  .top{ padding:.7rem 1.1rem; gap:.9rem; }
+  .top{ padding:.7rem 1.1rem; gap:1.2rem; }
+  .brand{ flex:none; }
   .brand img{ height:30px; }
   .brand span{ display:none; }
   .top nav{
     flex-wrap:nowrap; overflow-x:auto; gap:1.2rem;
     -webkit-overflow-scrolling:touch; scrollbar-width:none;
-    justify-content:flex-start; max-width:100%;
+    justify-content:flex-start; min-width:0;
+    -webkit-mask-image:linear-gradient(90deg, transparent, #000 .6rem);
+            mask-image:linear-gradient(90deg, transparent, #000 .6rem);
   }
   .top nav::-webkit-scrollbar{ display:none; }
   .top nav a{ font-size:.82rem; white-space:nowrap; padding-bottom:.2rem; flex:none; }
+  .top nav a:first-child{ padding-left:.15rem; }
 
   .foot{ padding:.65rem 1.1rem; font-size:.7rem; gap:.8rem; }
   .foot .sep{ margin:0 .4rem; }
