@@ -60,7 +60,7 @@ img{ max-width:100%; display:block; }
   opacity:.05; mix-blend-mode:overlay;
 }
 
-/* ---- entrance shutter ------------------------------------------- */
+/* ---- entrance / exit shutter --------------------------------------- */
 .shutter{
   position:fixed; inset:0; z-index:90; background:#050505; pointer-events:none;
   animation:shutterOut .5s ease .05s both;
@@ -80,7 +80,7 @@ body[data-room="threshold"].exit .stage{ transition:opacity .6s, transform .6s; 
   background:var(--bg);
 }
 .brand{ display:flex; align-items:center; gap:.9rem; text-decoration:none; color:var(--ink); min-width:0; }
-.brand img{ height:36px; width:auto; }
+.brand img{ height:36px; width:auto; flex:none; max-width:none; }
 .brand span{
   font-family:var(--serif); font-size:1.18rem; font-weight:500;
   white-space:nowrap; letter-spacing:.01em;
@@ -411,15 +411,80 @@ a.corner:hover{ color:var(--ink); }
 .faq dt:first-child{ margin-top:0; }
 .faq dd{ color:var(--dim); font-size:.84rem; line-height:1.65; margin-top:.3rem; }
 
-/* ---- small screens ------------------------------------------------------------------ */
+/* ---- small screens: compact, minimal scroll -------------------------------- */
 @media (max-width: 1020px), (max-height: 600px){
   body{ overflow:auto; }
-  .stage{ position:static; min-height:100vh; padding:8rem 1.3rem 7rem; }
+  .stage{
+    position:static; min-height:100svh;
+    display:flex; flex-direction:column;
+    padding:4.6rem 1.15rem 4.4rem;
+  }
+  .measure{ margin-block:auto; }
+  .cols{ gap:.85rem; }
   .cols.c2, .cols.c3, .fgrid{ grid-template-columns:1fr; }
-  .top{ padding:.85rem 1.3rem; }
-  .top nav{ gap:.95rem; }
-  .top nav a{ font-size:.78rem; }
+
+  h1{ font-size:clamp(1.7rem, 7vw, 2.3rem); margin-bottom:.8rem; }
+  h1[style]{ margin-bottom:1rem !important; }
+  .kicker{ font-size:.92rem; margin-bottom:.65rem; }
+  .lede{ font-size:.86rem; line-height:1.58; }
+  .card{ padding:.95rem 1.05rem; }
+  .card h3{ font-size:1.08rem; margin-bottom:.35rem; }
+  .card p, .card li{ font-size:.77rem; line-height:1.52; }
+  .card li{ padding:.24rem 0; }
+  .num{ margin-bottom:.35rem; font-size:.95rem; }
+  .actions{ margin-top:1.1rem; gap:.8rem; }
+  .btn{ padding:.74rem 1.45rem; font-size:.8rem; }
+  form{ gap:.8rem; }
+  .fgrid{ gap:.8rem; }
+  .field textarea{ min-height:2.6rem; }
+  .field label{ margin-bottom:.3rem; font-size:.72rem; }
+  .faq dt{ font-size:.98rem; margin-top:.7rem; }
+  .faq dd{ font-size:.77rem; line-height:1.5; }
+  .form-note{ font-size:.68rem; }
+  .ekg{ display:none; }
+
+  /* toolbar: one slim row, swipes sideways */
+  .top{ padding:.7rem 1.1rem; gap:.9rem; }
+  .brand img{ height:30px; }
   .brand span{ display:none; }
-  .foot{ padding:.85rem 1.3rem; flex-wrap:wrap; }
+  .top nav{
+    flex-wrap:nowrap; overflow-x:auto; gap:1.2rem;
+    -webkit-overflow-scrolling:touch; scrollbar-width:none;
+    justify-content:flex-start; max-width:100%;
+  }
+  .top nav::-webkit-scrollbar{ display:none; }
+  .top nav a{ font-size:.82rem; white-space:nowrap; padding-bottom:.2rem; flex:none; }
+
+  .foot{ padding:.65rem 1.1rem; font-size:.7rem; gap:.8rem; }
+  .foot .sep{ margin:0 .4rem; }
+
+  /* landing: no screw wall, static invitation */
+  #screws{ display:none; }
+  .hero-center img.mark{ height:clamp(64px, 9vh, 90px); margin-bottom:1.8rem; }
+  #chase{
+    left:50% !important; top:auto !important; bottom:13svh;
+    transform:translateX(-50%); font-size:.98rem;
+  }
+
   .watermark, .gear{ display:none; }
+  .metric{ padding:.9rem 1rem .8rem; }
+  .metric .big{ font-size:1.65rem; }
+  .metric .lbl{ margin:.25rem 0 .9rem; font-size:.74rem; }
+  .chart{ height:66px; }
+  .chart .bar span{ font-size:.6rem; top:-1.2rem; }
+  .xlabels span{ font-size:.58rem; }
+  .board-grid{ grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:1rem; }
+  .member .info{ padding:.85rem .95rem 1rem; }
+  .ekg{ margin-top:1.4rem; max-width:100%; }
+  body.scroll .stage{ padding:5.2rem 1.15rem 5rem; }
+  body.scroll .measure{ margin-block:0; }
+}
+
+/* touch devices: same treatment even on large tablets */
+@media (hover: none){
+  #screws{ display:none; }
+  #chase{
+    left:50% !important; top:auto !important; bottom:13svh;
+    transform:translateX(-50%);
+  }
 }

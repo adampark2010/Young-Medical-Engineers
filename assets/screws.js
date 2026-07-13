@@ -3,8 +3,31 @@
 (function () {
   "use strict";
 
+  var TOUCH = window.matchMedia("(hover: none)").matches;
+  var PRETTY = location.protocol === "https:";
+
+  /* -- click / tap anywhere: enter the site ------------------------ */
+  var leaving = false;
+  document.addEventListener("click", function (e) {
+    if (leaving || e.target.closest("a")) return;
+    leaving = true;
+    sessionStorage.setItem("dramatic", "1");
+    document.body.classList.add("exit");
+    window.setTimeout(function () {
+      location.href = PRETTY ? "mission" : "mission.html";
+    }, TOUCH ? 450 : 750);
+  });
+
+  /* -- the invitation -------------------------------------------- */
+  var chase = document.getElementById("chase");
+  if (chase) {
+    if (TOUCH) chase.textContent = "— tap anywhere to enter —";
+    window.setTimeout(function () { chase.classList.add("on"); }, 1400);
+  }
+
   var canvas = document.getElementById("screws");
   if (!canvas) return;
+  if (TOUCH) return;   // no cursor, no screw wall — flat background instead
   var ctx = canvas.getContext("2d");
 
   var DPR = Math.min(window.devicePixelRatio || 1, 2);
@@ -16,7 +39,6 @@
   var W = 0, H = 0;
   var mouse = { x: -9999, y: -9999, real: false };
   var t = 0;
-  var leaving = false;
   var leaveSpin = 0;
 
   var sprite = document.createElement("canvas");
@@ -126,15 +148,12 @@
     requestAnimationFrame(loop);
   }
 
-  /* -- the invitation follows the wrench -------------------------- */
-  var chase = document.getElementById("chase");
+  /* -- the invitation follows the wrench (desktop only) ------------ */
   var cx = -100, cy = -100;
   if (chase) {
-    // resting spot for touch / before first mouse move
+    // resting spot before the first mouse move
     chase.style.left = "50%";
     chase.style.top = "72%";
-    setTimeout(function () { chase.classList.add("on"); }, 1400);
-
     window.addEventListener("mousemove", function (e) {
       cx += (e.clientX - cx) * 0.16;
       cy += (e.clientY - cy) * 0.16;
@@ -142,15 +161,6 @@
       chase.style.top = cy + "px";
     });
   }
-
-  /* -- click anywhere: the wall spins shut, then we enter ----------- */
-  document.addEventListener("click", function (e) {
-    if (leaving || e.target.closest("a")) return;
-    leaving = true;
-    sessionStorage.setItem("dramatic", "1");
-    document.body.classList.add("exit");
-    setTimeout(function () { location.href = "mission.html"; }, 750);
-  });
 
   window.addEventListener("mousemove", function (e) {
     mouse.x = e.clientX; mouse.y = e.clientY; mouse.real = true;

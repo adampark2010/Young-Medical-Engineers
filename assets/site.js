@@ -8,6 +8,17 @@
                "donate.html", "contact.html"];
   var HERE = document.body.getAttribute("data-room");
 
+  /* -- pretty URLs on real hosting (GitHub Pages resolves /about to
+        about.html); local file:// and http://localhost keep .html --- */
+  var PRETTY = location.protocol === "https:";
+  function prettyHref(href) {
+    if (!PRETTY || !/\.html$/.test(href)) return href;
+    return href === "index.html" ? "./" : href.replace(/\.html$/, "");
+  }
+  if (PRETTY && /\.html$/.test(location.pathname)) {
+    history.replaceState(null, "", prettyHref(location.pathname.split("/").pop()));
+  }
+
   /* -- dramatic entrance after the threshold -------------------- */
   if (sessionStorage.getItem("dramatic")) {
     sessionStorage.removeItem("dramatic");
@@ -16,6 +27,7 @@
 
   function currentIndex() {
     var file = location.pathname.split("/").pop() || "index.html";
+    if (!/\.html$/.test(file)) file += ".html";
     var i = ROOMS.indexOf(file);
     return i < 0 ? 0 : i;
   }
@@ -23,7 +35,7 @@
   /* -- soft page transitions -------------------------------------- */
   function travel(href) {
     document.body.classList.add("exit");
-    window.setTimeout(function () { location.href = href; }, 340);
+    window.setTimeout(function () { location.href = prettyHref(href); }, 340);
   }
 
   document.addEventListener("click", function (e) {
@@ -139,7 +151,7 @@
         lab.textContent = e[0];
         xl.appendChild(lab);
         setTimeout(function () {
-          bar.style.height = Math.max(4, (e[1] / max) * 100) + "%";
+          bar.style.height = max > 0 ? Math.max(4, (e[1] / max) * 100) + "%" : "0%";
         }, 200);
       });
     });
