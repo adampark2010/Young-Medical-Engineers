@@ -89,7 +89,7 @@ body[data-room="threshold"].exit .stage{ transition:opacity .6s, transform .6s; 
 .top nav a{
   font-size:.92rem; font-weight:400; letter-spacing:.015em;
   text-decoration:none; color:var(--dim);
-  padding-left:.1rem; padding-bottom:.3rem; border-bottom:1px solid transparent;
+  padding-left:.075rem; padding-bottom:.3rem; border-bottom:1px solid transparent;
   transition:color .25s, border-color .25s;
 }
 .top nav a:hover{ color:var(--ink); }
