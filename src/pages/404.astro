@@ -1,0 +1,14 @@
+---
+import Page from '../layouts/Page.astro';
+import { shared } from '../content/copy';
+---
+
+<Page title="Not found" description={shared.notFoundHeading} eyebrow="Error 404" heading={shared.notFoundHeading}>
+  <div class="container">
+    <section class="section grid">
+      <div class="c3-8">
+        <p><a href="/mission/">{shared.notFoundLink}</a></p>
+      </div>
+    </section>
+  </div>
+</Page>

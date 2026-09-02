@@ -1,0 +1,97 @@
+---
+import Page from '../layouts/Page.astro';
+import { programs, meta } from '../content/copy';
+
+const numerals = ['I', 'II', 'III'];
+// The middle group (Supporting students, where tutoring lives) sits on the
+// page's single tint band.
+const bandIndex = 1;
+---
+
+<Page title="Programs" description={meta.programs} eyebrow={programs.eyebrow} heading={programs.heading}>
+  <div class="container">
+    <section class="section grid">
+      <div class="c3-9">
+        <p class="deck">{programs.intro}</p>
+      </div>
+    </section>
+  </div>
+
+  {
+    programs.groups.map((group, i) => {
+      const id = `group-${i + 1}`;
+      return (
+        <section class:list={['group', { band: i === bandIndex }]} aria-labelledby={id}>
+          <div class="container">
+            <hr class="rule" />
+            <div class="group-head grid">
+              <p class="numeral c1-2" aria-hidden="true">
+                {numerals[i]}
+              </p>
+              <h2 id={id} class="c3-11">
+                {group.label}
+              </h2>
+            </div>
+            <dl class="program-list">
+              {group.programs.map((program) => (
+                <div class="program grid">
+                  <dt class="c3-6">{program.name}</dt>
+                  <dd class="c7-11">{program.text}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </section>
+      );
+    })
+  }
+</Page>
+
+<style>
+  .group {
+    padding-bottom: 2rem;
+  }
+
+  .group.band {
+    padding-block: 0 2.5rem;
+    margin-top: 1rem;
+  }
+
+  .group.band .rule {
+    border-top-color: transparent;
+  }
+
+  .group-head {
+    padding-block: 2.5rem 1.5rem;
+    align-items: baseline;
+  }
+
+  .program-list {
+    border-top: 1px solid var(--divider);
+  }
+
+  .program {
+    padding-block: 1.5rem;
+    border-bottom: 1px solid var(--divider);
+    align-items: start;
+  }
+
+  .program dt {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 1.5rem;
+    line-height: 1.25;
+  }
+
+  @media (max-width: 900px) {
+    .group-head {
+      padding-block: 1.75rem 1rem;
+    }
+    .numeral {
+      font-size: 1.75rem;
+    }
+    .program dt {
+      margin-bottom: 0.5rem;
+    }
+  }
+</style>

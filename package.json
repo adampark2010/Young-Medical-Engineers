@@ -1,0 +1,19 @@
+{
+  "name": "young-medical-engineers",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "brand": "node scripts/derive-brand.mjs",
+    "audit": "node scripts/audit.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/newsreader": "^5.2.5",
+    "@fontsource-variable/source-sans-3": "^5.2.5",
+    "astro": "^5.13.0",
+    "sharp": "^0.34.3"
+  }
+}

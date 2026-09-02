@@ -1,0 +1,44 @@
+---
+import Page from '../layouts/Page.astro';
+import Form from '../components/Form.astro';
+import Input from '../components/Input.astro';
+import Select from '../components/Select.astro';
+import { tutoring, meta } from '../content/copy';
+
+const f = tutoring.form;
+---
+
+<Page title="Tutoring" description={meta.tutoring} eyebrow={tutoring.eyebrow} heading={tutoring.heading}>
+  <div class="container">
+    <section class="section grid form-page">
+      <div class="c3-6 intro">
+        <p>{tutoring.body}</p>
+      </div>
+      <div class="c8-12">
+        <Form
+          name="tutoring"
+          submitLabel={f.submit}
+          successHeading={f.successHeading}
+          success={f.success}
+          error={f.error}
+        >
+          <div class="form-row">
+            <Input id="s-name" name="Student name" label={f.fields.name} autocomplete="name" />
+            <Input id="s-email" name="Email" label={f.fields.email} type="email" autocomplete="email" />
+          </div>
+          <div class="form-row">
+            <Select id="s-grade" name="Grade level" label={f.fields.grade} options={f.gradeOptions} />
+            <Select id="s-subject" name="Subject" label={f.fields.subject} options={f.subjectOptions} />
+          </div>
+          <Input id="s-goals" name="Goals" label={f.fields.goals} textarea />
+        </Form>
+      </div>
+    </section>
+  </div>
+</Page>
+
+<style>
+  .form-page {
+    row-gap: 2.5rem;
+  }
+</style>

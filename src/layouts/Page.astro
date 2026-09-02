@@ -1,0 +1,39 @@
+---
+/**
+ * Inner page shell: masthead, page head (eyebrow in the margin column, title
+ * on the content columns, hairline), content slot, footer.
+ */
+import Base from './Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  eyebrow: string;
+  heading: string;
+}
+
+const { title, description, eyebrow, heading } = Astro.props;
+---
+
+<Base title={title} description={description}>
+  <Header />
+  <main id="main" class="fade-in" tabindex="-1">
+    <div class="container">
+      <header class="page-head grid">
+        <p class="eyebrow c1-2">{eyebrow}</p>
+        <h1 class="c3-11">{heading}</h1>
+      </header>
+      <hr class="rule" />
+    </div>
+    <slot />
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  main:focus {
+    outline: none;
+  }
+</style>

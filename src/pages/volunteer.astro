@@ -1,0 +1,45 @@
+---
+import Page from '../layouts/Page.astro';
+import Form from '../components/Form.astro';
+import Input from '../components/Input.astro';
+import Select from '../components/Select.astro';
+import { volunteer, meta } from '../content/copy';
+
+const f = volunteer.form;
+---
+
+<Page title="Volunteer" description={meta.volunteer} eyebrow={volunteer.eyebrow} heading={volunteer.heading}>
+  <div class="container">
+    <section class="section grid form-page">
+      <div class="c3-6 intro">
+        <p>{volunteer.body}</p>
+      </div>
+      <div class="c8-12">
+        <Form
+          name="volunteer"
+          submitLabel={f.submit}
+          successHeading={f.successHeading}
+          success={f.success}
+          error={f.error}
+        >
+          <div class="form-row">
+            <Input id="v-name" name="Name" label={f.fields.name} autocomplete="name" />
+            <Input id="v-email" name="Email" label={f.fields.email} type="email" autocomplete="email" />
+          </div>
+          <Input id="v-inst" name="Institution" label={f.fields.institution} autocomplete="organization" />
+          <div class="form-row">
+            <Select id="v-help" name="How you'd like to help" label={f.fields.help} options={f.helpOptions} />
+            <Select id="v-avail" name="Availability" label={f.fields.availability} options={f.availabilityOptions} />
+          </div>
+          <Input id="v-subjects" name="Subjects" label={f.fields.subjects} textarea />
+        </Form>
+      </div>
+    </section>
+  </div>
+</Page>
+
+<style>
+  .form-page {
+    row-gap: 2.5rem;
+  }
+</style>

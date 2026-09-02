@@ -1,0 +1,43 @@
+---
+import Page from '../layouts/Page.astro';
+import { donate, meta } from '../content/copy';
+import { SITE } from '../config';
+---
+
+<Page title="Donate" description={meta.donate} eyebrow={donate.eyebrow} heading={donate.heading}>
+  <div class="container">
+    <section class="section grid">
+      <div class="c3-8 prose">
+        <p class="deck">{donate.body[0]}</p>
+        <p>{donate.body[1]}</p>
+      </div>
+    </section>
+
+    <section class="give grid" aria-label="How to give">
+      <div class="c3-8">
+        <hr class="rule" />
+        <p class="give-line">{donate.paymentLine}</p>
+        <p class="give-action">
+          <a class="btn" href={SITE.paypalUrl} rel="noopener" target="_blank">{donate.button}</a>
+        </p>
+        <hr class="rule rule-faint" />
+        <p class="meta status">{donate.status}</p>
+      </div>
+    </section>
+  </div>
+</Page>
+
+<style>
+  .give-line {
+    padding-top: 1.75rem;
+  }
+
+  .give-action {
+    padding-block: 1.25rem 2rem;
+  }
+
+  .status {
+    padding-top: 1.25rem;
+    max-width: var(--measure);
+  }
+</style>
