@@ -155,6 +155,10 @@ export const volunteer = {
       '4+ hours / week', // carried
       'Occasional, for events and challenges',
     ],
+    // "Subjects you can teach" is optional here, since speakers and judges
+    // need not teach. UI text, not from the document.
+    // TODO(copy): confirm this note's wording with the team.
+    note: 'All fields are required except where marked optional.',
     submit: 'Apply to volunteer', // carried
     successHeading: 'Application received.', // carried
     success: 'Thank you for applying. We will follow up with a brief orientation and your first match, usually within a week.',
@@ -245,6 +249,7 @@ export const impact = {
 export const shared = {
   formNote: 'All fields are required.', // carried
   chooseOption: 'Choose an option', // select placeholder (UI text)
+  optional: 'optional', // label marker for non-required fields (UI text)
   skipLink: 'Skip to content', // UI text
   menu: 'Menu', // UI text, menu toggle when closed
   close: 'Close', // UI text, menu toggle when open

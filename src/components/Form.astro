@@ -15,9 +15,10 @@ interface Props {
   successHeading: string;
   success: string;
   error: string;
+  note?: string; // requirement note shown above the button; defaults to the shared one
 }
 
-const { name, submitLabel, successHeading, success, error } = Astro.props;
+const { name, submitLabel, successHeading, success, error, note = shared.formNote } = Astro.props;
 const errorId = `${name}-error`;
 ---
 
@@ -32,7 +33,7 @@ const errorId = `${name}-error`;
     data-form-name={name}
   >
     <slot />
-    <p class="meta">{shared.formNote}</p>
+    <p class="meta">{note}</p>
     <div class="form-actions">
       <button class="btn" type="submit">{submitLabel}</button>
     </div>

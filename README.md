@@ -98,4 +98,7 @@ Search the source for `TODO(` to find them. As of the rebuild:
   document allows a broader heading but supplied none.
 - `TODO(copy)`: the Programs page has no supplied title or eyebrow; the page
   name stands in as the title and the eyebrow is empty.
+- `TODO(copy)`: on the Volunteer form, "Subjects you can teach" is optional
+  (speakers and judges need not teach); the note "All fields are required
+  except where marked optional." is UI text to confirm.
 - `TODO(board)`: confirm the ten names and roles; add bios when written.

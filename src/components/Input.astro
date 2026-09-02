@@ -1,4 +1,6 @@
 ---
+import { shared } from '../content/copy';
+
 interface Props {
   id: string;
   name: string;
@@ -6,18 +8,26 @@ interface Props {
   type?: 'text' | 'email';
   autocomplete?: string;
   textarea?: boolean;
+  optional?: boolean; // fields are required unless marked optional
 }
 
-const { id, name, label, type = 'text', autocomplete, textarea = false } = Astro.props;
+const { id, name, label, type = 'text', autocomplete, textarea = false, optional = false } = Astro.props;
 ---
 
 <div class="field">
-  <label for={id}>{label}</label>
+  <label for={id}>{label}{optional && <span class="optional"> ({shared.optional})</span>}</label>
   {
     textarea ? (
-      <textarea id={id} name={name} required rows={5} />
+      <textarea id={id} name={name} required={!optional} rows={5} />
     ) : (
-      <input id={id} name={name} type={type} autocomplete={autocomplete} required />
+      <input id={id} name={name} type={type} autocomplete={autocomplete} required={!optional} />
     )
   }
 </div>
+
+<style>
+  .optional {
+    font-weight: 400;
+    color: var(--muted);
+  }
+</style>
