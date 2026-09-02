@@ -10,34 +10,34 @@ import { SITE } from '../config';
       <div class="c3-8 prose">
         <p class="deck">{donate.body[0]}</p>
         <p>{donate.body[1]}</p>
+        <p class="status muted">{donate.status}</p>
       </div>
     </section>
 
-    <section class="give grid" aria-label="How to give">
+    <section class="give grid">
       <div class="c3-8">
         <hr class="rule" />
         <p class="give-line">{donate.paymentLine}</p>
         <p class="give-action">
           <a class="btn" href={SITE.paypalUrl} rel="noopener" target="_blank">{donate.button}</a>
         </p>
-        <hr class="rule rule-faint" />
-        <p class="meta status">{donate.status}</p>
       </div>
     </section>
   </div>
 </Page>
 
 <style>
+  .status {
+    font-size: 1rem;
+    line-height: 1.5;
+    max-width: var(--measure);
+  }
+
   .give-line {
     padding-top: 1.75rem;
   }
 
   .give-action {
-    padding-block: 1.25rem 2rem;
-  }
-
-  .status {
-    padding-top: 1.25rem;
-    max-width: var(--measure);
+    padding-block: 1.25rem 2.5rem;
   }
 </style>

@@ -57,6 +57,11 @@ textarea {
   color: inherit;
 }
 
+/* The hidden attribute must win over any display rule set by a class. */
+[hidden] {
+  display: none !important;
+}
+
 /* ---------- Type ---------- */
 h1,
 h2,
@@ -277,8 +282,8 @@ main {
 }
 
 .btn:hover {
-  background: var(--accent-warm);
-  border-color: var(--accent-warm);
+  background: var(--accent-deep);
+  border-color: var(--accent-deep);
   text-decoration: none;
 }
 
@@ -369,6 +374,10 @@ main {
   padding-left: 1rem;
   border-left: 2px solid var(--accent);
   color: var(--ink);
+}
+
+.form-error:focus {
+  outline: none;
 }
 
 .form-done {

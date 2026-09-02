@@ -7,8 +7,7 @@
  * Where the document is silent, the previous site's text is carried forward
  * (marked "carried"), or a TODO is left. TODOs are listed in the README.
  */
-import { SHOW_DEMONSTRATIONS } from '../config';
-import { demonstrations } from './provisional-demonstrations';
+import { SHOW_DEMONSTRATIONS, demonstrations } from './provisional-demonstrations';
 
 export const splash = {
   name: 'Young Medical Engineers',
@@ -66,8 +65,12 @@ const buildingInterest: Program[] = [
 if (SHOW_DEMONSTRATIONS) buildingInterest.push(demonstrations);
 
 export const programs = {
-  eyebrow: 'Programs', // page name; the previous eyebrow ("Three programs, one workshop") is no longer accurate
-  heading: 'Programs', // page name used as the title; the document supplies the intro line below, not a title
+  // TODO(copy): the document supplies the intro line and the three group
+  // labels but no page title or eyebrow. The previous eyebrow ("Three
+  // programs, one workshop") is no longer accurate, so the page name stands
+  // in as the title and the eyebrow is left empty.
+  eyebrow: '',
+  heading: 'Programs',
   intro:
     'Our programs serve two purposes: introducing students to biomedical engineering, and supporting those who decide to pursue it.',
   groups: [
@@ -152,6 +155,10 @@ export const volunteer = {
       '4+ hours / week', // carried
       'Occasional, for events and challenges',
     ],
+    // "Subjects you can teach" is optional here, since speakers and judges
+    // need not teach. UI text, not from the document.
+    // TODO(copy): confirm this note's wording with the team.
+    note: 'All fields are required except where marked optional.',
     submit: 'Apply to volunteer', // carried
     successHeading: 'Application received.', // carried
     success: 'Thank you for applying. We will follow up with a brief orientation and your first match, usually within a week.',
@@ -242,9 +249,10 @@ export const impact = {
 export const shared = {
   formNote: 'All fields are required.', // carried
   chooseOption: 'Choose an option', // select placeholder (UI text)
+  optional: 'optional', // label marker for non-required fields (UI text)
   skipLink: 'Skip to content', // UI text
-  menu: 'Menu', // UI text
-  close: 'Close', // UI text
+  menu: 'Menu', // UI text, menu toggle when closed
+  close: 'Close', // UI text, menu toggle when open
   notFoundHeading: 'Page not found.', // UI text
   notFoundLink: 'Return to the site', // UI text
 } as const;

@@ -22,7 +22,7 @@ npm run audit      # hard-rule checks against dist/ (run after build)
 | `src/content/board.ts` | Board roster. Set `bio` on a member to replace "Bio coming soon." |
 | `src/content/nav.ts` | Route set and order. |
 | `src/content/provisional-demonstrations.ts` | The Hands-on demonstrations program. Provisional, see below. |
-| `src/config.ts` | Site constants, contact channels, the form endpoint, and the demonstrations switch. |
+| `src/config.ts` | Site constants, contact channels, and the form endpoint. |
 | `src/styles/tokens.css` | Colour, type and grid tokens. Every colour traces to a sampled logo value. |
 | `src/styles/global.css` | Base styles, grid, forms, buttons. |
 | `src/layouts/Base.astro` | Document head, fonts, skip link. |
@@ -64,15 +64,19 @@ directly.
 ## Provisional: Hands-on demonstrations
 
 The team has not decided whether demonstrations run. Everything that exists
-only because of them is gated on `SHOW_DEMONSTRATIONS` in `src/config.ts`:
+only because of them is gated on `SHOW_DEMONSTRATIONS` in
+`src/content/provisional-demonstrations.ts`:
 
 - the Hands-on demonstrations item under Programs > Building interest
 - "or demo" in the Contact topic "Request a talk or demo"
 - "Help with demonstrations" on the Volunteer form
 
-To drop demonstrations in one commit: set the flag to `false` and delete
-`src/content/provisional-demonstrations.ts`. Note that the approved About
-intro and two Contact FAQ answers also mention demonstrations in passing; those
+To drop demonstrations in one commit: set the flag to `false`. That is the
+whole change; the build, the audit and every page adapt. Deleting the file
+afterwards (with its import in `copy.ts`) is optional cleanup.
+
+Note that the approved About intro and two Contact FAQ answers ("What do you
+do?" and "Where do you operate?") also mention demonstrations in passing; those
 are approved sentences and would need new wording from the team.
 
 ## Forms
@@ -92,4 +96,9 @@ Search the source for `TODO(` to find them. As of the rebuild:
   page's approved copy as a stand-in; supply dedicated ones if wanted.
 - `TODO(copy)`: the Volunteer page eyebrow is still "Become a tutor"; the
   document allows a broader heading but supplied none.
+- `TODO(copy)`: the Programs page has no supplied title or eyebrow; the page
+  name stands in as the title and the eyebrow is empty.
+- `TODO(copy)`: on the Volunteer form, "Subjects you can teach" is optional
+  (speakers and judges need not teach); the note "All fields are required
+  except where marked optional." is UI text to confirm.
 - `TODO(board)`: confirm the ten names and roles; add bios when written.

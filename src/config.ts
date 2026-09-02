@@ -1,17 +1,10 @@
 /**
- * Site-wide switches.
- *
- * PROVISIONAL: Hands-on demonstrations.
- * The team has not finalised whether demonstrations run. Everything that
- * exists only because of demonstrations is gated on this one flag:
- *   - the "Hands-on demonstrations" item under Programs > Building interest
- *     (src/content/provisional-demonstrations.ts)
- *   - the "or demo" wording in the Contact topic dropdown
- *   - the "Help with demonstrations" option on the Volunteer form
- * To drop demonstrations in one commit: set this to false and delete
- * src/content/provisional-demonstrations.ts.
+ * Site-wide constants and switches.
  */
-export const SHOW_DEMONSTRATIONS = true;
+
+// PROVISIONAL: Hands-on demonstrations. The switch lives next to the copy it
+// gates; see src/content/provisional-demonstrations.ts for how to remove it.
+export { SHOW_DEMONSTRATIONS } from './content/provisional-demonstrations';
 
 export const SITE = {
   name: 'Young Medical Engineers',

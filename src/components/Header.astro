@@ -3,6 +3,9 @@
  * Masthead. One lockup on every inner page: the emblem (logo-mark) at a fixed
  * height beside the typeset name, held at the container's left margin so the
  * mark shares a vertical axis with every page title beneath it.
+ *
+ * The nine-item nav needs about 1180px alongside the lockup, so the menu
+ * collapses below that; the compact 56px masthead applies below 900px.
  */
 import { Image } from 'astro:assets';
 import mark from '../brand/originals/logo-mark.png';
@@ -29,9 +32,16 @@ const current = Astro.url.pathname;
       <span class="brand-name">{SITE.name}</span>
     </a>
 
-    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+    <button
+      class="nav-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="site-nav"
+      data-label-open={shared.close}
+      data-label-closed={shared.menu}
+    >
       <span class="nav-toggle-icon" aria-hidden="true"></span>
-      <span class="nav-toggle-label">{shared.menu}</span>
+      <span class="nav-toggle-label" data-nav-label>{shared.menu}</span>
     </button>
 
     <nav id="site-nav" class="site-nav" aria-label="Site">
@@ -91,7 +101,7 @@ const current = Astro.url.pathname;
 
   .site-nav ul {
     display: flex;
-    gap: 2rem;
+    gap: 1.5rem;
   }
 
   .site-nav a {
@@ -103,6 +113,7 @@ const current = Astro.url.pathname;
     color: var(--ink);
     text-decoration: none;
     border-bottom: 2px solid transparent;
+    white-space: nowrap;
   }
 
   .site-nav a:hover {
@@ -160,26 +171,8 @@ const current = Astro.url.pathname;
     transform: translateY(-5.25px) rotate(-45deg);
   }
 
-  @media (max-width: 900px) {
-    .masthead-inner {
-      min-height: 56px;
-      gap: 1rem;
-    }
-
-    .brand {
-      gap: 14px;
-      padding-block: 14px;
-    }
-
-    .brand-mark {
-      width: 58px;
-      height: 28px;
-    }
-
-    .brand-name {
-      font-size: 1.125rem;
-    }
-
+  /* Collapsed navigation (menu panel) below 1180px. */
+  @media (max-width: 1180px) {
     :global(html.js) .nav-toggle {
       display: inline-flex;
     }
@@ -187,7 +180,7 @@ const current = Astro.url.pathname;
     :global(html.js) .site-nav {
       display: none;
       position: fixed;
-      inset: 57px 0 0 0;
+      inset: 73px 0 0 0;
       z-index: 50;
       background: var(--paper);
       overflow-y: auto;
@@ -208,9 +201,16 @@ const current = Astro.url.pathname;
       flex-wrap: wrap;
     }
 
-    .site-nav ul {
+    :global(html.no-js) .site-nav ul {
+      flex-wrap: wrap;
+      gap: 0.25rem 1.5rem;
+    }
+
+    :global(html.js) .site-nav ul {
       flex-direction: column;
       gap: 0;
+      max-width: var(--container);
+      margin-inline: auto;
     }
 
     :global(html.js) .site-nav li + li {
@@ -228,10 +228,37 @@ const current = Astro.url.pathname;
       border-left: 2px solid transparent;
       padding-left: 0.75rem;
       margin-left: -0.75rem;
+      white-space: normal;
     }
 
     :global(html.js) .site-nav a[aria-current='page'] {
       border-left-color: var(--accent);
+    }
+  }
+
+  /* Compact masthead on small screens. */
+  @media (max-width: 900px) {
+    .masthead-inner {
+      min-height: 56px;
+      gap: 1rem;
+    }
+
+    .brand {
+      gap: 14px;
+      padding-block: 14px;
+    }
+
+    .brand-mark {
+      width: 58px;
+      height: 28px;
+    }
+
+    .brand-name {
+      font-size: 1.125rem;
+    }
+
+    :global(html.js) .site-nav {
+      inset: 57px 0 0 0;
     }
   }
 
@@ -250,21 +277,31 @@ const current = Astro.url.pathname;
 <script>
   const toggle = document.querySelector<HTMLButtonElement>('.nav-toggle');
   const nav = document.getElementById('site-nav');
+  const label = toggle?.querySelector<HTMLElement>('[data-nav-label]');
+  // Everything outside the masthead is made inert while the panel is open, so
+  // focus and screen readers stay inside the menu.
+  const outside = Array.from(document.querySelectorAll<HTMLElement>('main, footer'));
+
   if (toggle && nav) {
     const setOpen = (open: boolean) => {
       toggle.setAttribute('aria-expanded', String(open));
+      if (label) label.textContent = open ? toggle.dataset.labelOpen || '' : toggle.dataset.labelClosed || '';
       if (open) nav.setAttribute('data-open', '');
       else nav.removeAttribute('data-open');
       document.body.style.overflow = open ? 'hidden' : '';
+      for (const el of outside) el.toggleAttribute('inert', open);
     };
+
     toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
         setOpen(false);
         toggle.focus();
       }
     });
-    window.matchMedia('(min-width: 901px)').addEventListener('change', (e) => {
+
+    window.matchMedia('(min-width: 1181px)').addEventListener('change', (e) => {
       if (e.matches) setOpen(false);
     });
   }
