@@ -30,14 +30,13 @@ const errorId = `${name}-error`;
     data-form
     data-endpoint={FORM_ENDPOINT ?? ''}
     data-form-name={name}
-    aria-describedby={errorId}
   >
     <slot />
+    <p class="meta">{shared.formNote}</p>
     <div class="form-actions">
       <button class="btn" type="submit">{submitLabel}</button>
-      <span class="meta">{shared.formNote}</span>
     </div>
-    <p class="form-error" id={errorId} hidden data-form-error>
+    <p class="form-error" id={errorId} role="alert" tabindex="-1" hidden data-form-error>
       {error}
     </p>
     <noscript>
@@ -60,6 +59,12 @@ const errorId = `${name}-error`;
     const error = form.querySelector<HTMLElement>('[data-form-error]');
     const endpoint = form.dataset.endpoint || '';
 
+    const showError = () => {
+      if (!error) return;
+      error.hidden = false;
+      error.focus();
+    };
+
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
       if (error) error.hidden = true;
@@ -68,7 +73,7 @@ const errorId = `${name}-error`;
       if (!form.reportValidity()) return;
 
       if (!endpoint) {
-        if (error) error.hidden = false;
+        showError();
         return;
       }
 
@@ -89,7 +94,7 @@ const errorId = `${name}-error`;
           done.focus();
         }
       } catch {
-        if (error) error.hidden = false;
+        showError();
       } finally {
         if (submit) submit.disabled = false;
       }

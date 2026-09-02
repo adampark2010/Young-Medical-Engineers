@@ -22,7 +22,7 @@ const { title, description, eyebrow, heading } = Astro.props;
   <main id="main" class="fade-in" tabindex="-1">
     <div class="container">
       <header class="page-head grid">
-        <p class="eyebrow c1-2">{eyebrow}</p>
+        {eyebrow ? <p class="eyebrow c1-2">{eyebrow}</p> : <div class="c1-2" aria-hidden="true" />}
         <h1 class="c3-11">{heading}</h1>
       </header>
       <hr class="rule" />

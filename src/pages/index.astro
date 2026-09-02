@@ -2,7 +2,8 @@
 /**
  * Splash / cover page. The one surface where the emblem is largest and leads.
  * Sits on the tint ground; the only full-tint surface on the site.
- * Enter: a real link (first in tab order) plus click-anywhere for pointers.
+ * Enter: a real link (after the skip link and the two contact links in tab
+ * order) plus click-anywhere for pointers.
  */
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
@@ -31,8 +32,8 @@ import { SITE } from '../config';
         <Image
           src={mark}
           alt="Young Medical Engineers emblem: a medical cross, the letters YME, and a gear"
-          widths={[335, 480, 620, 940, 1240]}
-          sizes="(max-width: 900px) calc(100vw - 40px), 620px"
+          widths={[335, 480, 660, 990, 1320]}
+          sizes="(max-width: 900px) calc(100vw - 40px), 660px"
           loading="eager"
           decoding="sync"
           fetchpriority="high"
@@ -92,8 +93,8 @@ import { SITE } from '../config';
   .splash-stage {
     flex: 1 0 auto;
     align-content: center;
-    row-gap: 2.5rem;
-    padding-block: 3rem;
+    row-gap: 2rem;
+    padding-block: 2rem;
   }
 
   .splash-emblem {
@@ -102,7 +103,7 @@ import { SITE } from '../config';
 
   .splash-emblem img {
     width: 100%;
-    max-height: 38vh; /* keep the whole cover in view on short screens */
+    max-height: 34vh; /* keep the whole cover in view on short screens */
     height: auto;
     object-fit: contain;
     object-position: left center;
@@ -113,7 +114,7 @@ import { SITE } from '../config';
   }
 
   .splash-name {
-    font-size: clamp(3rem, 1.5rem + 5vw, 6rem); /* 48 to 96px */
+    font-size: clamp(3rem, 1.5rem + 4.5vw, 5.5rem); /* 48 to 88px */
     line-height: 0.95;
     letter-spacing: -0.02em;
     max-width: 8em;

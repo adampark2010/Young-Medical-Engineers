@@ -1,12 +1,12 @@
 ---
 /**
  * Footer. The single-line wordmark (logo-word) appears here and nowhere else
- * on inner pages, bookending the serif name in the masthead.
+ * on inner pages, bookending the serif name in the masthead. It is held at
+ * 22px tall on desktop and 18px on small screens, never scaled by the grid.
  */
 import { Image } from 'astro:assets';
 import wordmark from '../brand/originals/logo-word.png';
 import { nav } from '../content/nav';
-import { splash } from '../content/copy';
 import { SITE } from '../config';
 import InstagramIcon from './InstagramIcon.astro';
 ---
@@ -14,8 +14,8 @@ import InstagramIcon from './InstagramIcon.astro';
 <footer class="footer">
   <div class="container">
     <hr class="rule" />
-    <div class="footer-grid grid">
-      <div class="footer-brand c1-2">
+    <div class="footer-grid">
+      <div class="footer-brand">
         <a href="/" class="wordmark-link">
           <Image
             src={wordmark}
@@ -28,12 +28,12 @@ import InstagramIcon from './InstagramIcon.astro';
           />
         </a>
       </div>
-      <nav class="footer-nav c3-8" aria-label="Site, footer">
+      <nav class="footer-nav" aria-label="Site, footer">
         <ul>
           {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
         </ul>
       </nav>
-      <div class="footer-contact c8-12">
+      <div class="footer-contact">
         <p><a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
         <p>
           <a class="ig" href={SITE.instagramUrl} rel="noopener" target="_blank">
@@ -43,7 +43,6 @@ import InstagramIcon from './InstagramIcon.astro';
         </p>
       </div>
     </div>
-    <p class="colophon meta">{splash.topStrip}</p>
   </div>
 </footer>
 
@@ -54,13 +53,11 @@ import InstagramIcon from './InstagramIcon.astro';
   }
 
   .footer-grid {
-    padding-block: 2rem 1.5rem;
+    display: grid;
+    grid-template-columns: 249px minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: calc(var(--gutter) * 2);
     row-gap: 1.5rem;
-  }
-
-  .footer-brand {
-    grid-column: 1 / 3;
-    min-width: 0;
+    padding-block: 2rem 1.5rem;
   }
 
   .wordmark-link {
@@ -69,8 +66,7 @@ import InstagramIcon from './InstagramIcon.astro';
 
   .wordmark {
     width: 249px;
-    max-width: 100%;
-    height: auto;
+    height: 22px;
   }
 
   .footer-nav ul {
@@ -106,33 +102,18 @@ import InstagramIcon from './InstagramIcon.astro';
     gap: 0.4rem;
   }
 
-  .colophon {
-    padding-top: 1rem;
-    border-top: 1px solid var(--divider);
-  }
-
   @media (max-width: 900px) {
     .footer {
       margin-top: 3rem;
     }
 
-    .footer-brand {
-      grid-column: 1 / -1;
+    .footer-grid {
+      grid-template-columns: 1fr;
     }
 
     .wordmark {
-      width: 204px; /* 18px tall on mobile */
-    }
-  }
-
-  @media (min-width: 901px) {
-    /* The wordmark needs more than the two margin columns; let it overflow
-       into the gutter rather than shrink. */
-    .footer-brand {
-      grid-column: 1 / 4;
-    }
-    .footer-nav {
-      grid-column: 4 / 8;
+      width: 204px; /* 18px tall */
+      height: 18px;
     }
   }
 </style>

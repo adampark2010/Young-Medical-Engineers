@@ -70,12 +70,12 @@ for (const f of htmlFiles) pages[f] = await readFile(f, 'utf8');
 
 // 1. Em dashes
 for (const [f, html] of Object.entries(pages)) {
-  const n = (html.match(/—/g) || []).length;
+  const n = (html.match(/\u2014/g) || []).length;
   if (n) fail(`${f}: ${n} em dash(es)`);
 }
 for (const f of srcFiles) {
   const s = await readFile(f, 'utf8');
-  const n = (s.match(/—/g) || []).length;
+  const n = (s.match(/\u2014/g) || []).length;
   if (n) fail(`${f}: ${n} em dash(es) in source`);
 }
 notes.push(`em dash scan: ${htmlFiles.length} built pages, ${srcFiles.length} source files`);
@@ -114,7 +114,13 @@ const emoji = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{1F000}-\u{1F2FF}]/u;
 for (const [f, html] of Object.entries(pages)) if (emoji.test(html)) fail(`${f}: emoji present`);
 
 // 6. Approved copy present verbatim
-const approved = JSON.parse(await readFile('scripts/approved-copy.json', 'utf8'));
+// The demonstrations block is expected only while the provisional flag is on.
+const provisionalSrc = await readFile('src/content/provisional-demonstrations.ts', 'utf8');
+const showDemos = /SHOW_DEMONSTRATIONS\s*=\s*true/.test(provisionalSrc);
+const approved = JSON.parse(await readFile('scripts/approved-copy.json', 'utf8')).filter(
+  (b) => showDemos || !/^Hands-on demonstrations\./.test(b.name || ''),
+);
+if (!showDemos) notes.push('demonstrations flag is off: its copy block is not expected');
 const corpus = Object.values(pages).map(textOf).join('\n');
 const headCorpus = Object.values(pages).map((h) => norm(h)).join('\n');
 let present = 0;
@@ -122,7 +128,10 @@ for (const block of approved) {
   const text = norm(block.text);
   const isMeta = block.label === 'Page meta description:';
   const isList = text.includes(' · ') && !block.label?.startsWith('Top strip') && !block.label?.startsWith('Subline');
-  const ok = isMeta ? headCorpus.includes(text) : isList ? text.split(' · ').every((opt) => corpus.includes(norm(opt))) : corpus.includes(text);
+  const options = isList
+    ? text.split(' · ').filter((opt) => showDemos || opt !== 'Request a talk or demo')
+    : [];
+  const ok = isMeta ? headCorpus.includes(text) : isList ? options.every((opt) => corpus.includes(norm(opt))) : corpus.includes(text);
   if (!ok) fail(`approved copy missing: "${text.slice(0, 70)}..."`);
   else present++;
   if (block.name) {

@@ -16,7 +16,8 @@
 
   /* Accent, from the logo */
   --accent: #b24740;      /* logo red, exact: links, the one button, one emphasis per page */
-  --accent-warm: #ce5b4b; /* logo coral, exact: hover and underline only, never text */
+  --accent-deep: #9a3d37; /* logo red at 86% value: button hover, keeps white text at 6.6:1 */
+  --accent-warm: #ce5b4b; /* logo coral, exact: link underline and hover rules only, never a text or button colour */
   --navy: #3d537a;        /* logo navy, exact: eyebrows and margin numerals */
   --steel: #8b92ab;       /* logo steel, exact: decorative only */
 
