@@ -1,0 +1,23 @@
+---
+import Page from '../layouts/Page.astro';
+import { mission, meta } from '../content/copy';
+---
+
+<Page title="Mission" description={meta.mission} eyebrow={mission.eyebrow} heading={mission.heading}>
+  <div class="container">
+    <section class="section grid">
+      <div class="c3-9">
+        <p class="deck">{mission.paragraphs[0]}</p>
+      </div>
+      <div class="c3-8 body">
+        <p>{mission.paragraphs[1]}</p>
+      </div>
+    </section>
+  </div>
+</Page>
+
+<style>
+  .body {
+    margin-top: 2rem;
+  }
+</style>

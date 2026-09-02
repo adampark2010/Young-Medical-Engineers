@@ -1,0 +1,45 @@
+/* Design tokens. Every colour traces to a sampled logo value; see README. */
+:root {
+  /* Surfaces */
+  --paper: #f6f5f3;   /* logo light grey #DEDDDF lifted and warmed */
+  --field: #ffffff;   /* inputs */
+  --tint: #f2ebe8;    /* accent red at 6% over paper; one band per page */
+
+  /* Text */
+  --ink: #1a2333;     /* logo navy #3D537A at 42% value */
+  --muted: #5c5b59;   /* logo gear grey #737373 darkened to 6.2:1 on paper */
+
+  /* Lines */
+  --hairline: #c9c8c7;      /* logo light grey darkened so the grid is visible */
+  --divider: #dedddf;       /* logo light grey, exact; faint dividers inside forms */
+  --border-strong: #737373; /* logo gear grey, exact; form fields, menu icon */
+
+  /* Accent, from the logo */
+  --accent: #b24740;      /* logo red, exact: links, the one button, one emphasis per page */
+  --accent-warm: #ce5b4b; /* logo coral, exact: hover and underline only, never text */
+  --navy: #3d537a;        /* logo navy, exact: eyebrows and margin numerals */
+  --steel: #8b92ab;       /* logo steel, exact: decorative only */
+
+  /* Type */
+  --font-serif: 'Newsreader Variable', 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  --font-sans: 'Source Sans 3 Variable', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --text: 1.125rem;      /* 18px */
+  --leading: 1.5556;     /* 28px */
+
+  /* Geometry */
+  --radius: 2px;
+  --gutter: 24px;
+  --margin: 80px;
+  --container: 1280px;
+  --measure: 36em;       /* about 65 to 72 characters at 18px */
+
+  /* Motion */
+  --fade: 200ms;
+}
+
+@media (max-width: 900px) {
+  :root {
+    --margin: 20px;
+    --gutter: 16px;
+  }
+}

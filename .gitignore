@@ -1,6 +1,11 @@
 # Local Claude Code settings (machine-specific permissions)
 .claude/settings.local.json
 
+# Build output and dependencies
+dist/
+node_modules/
+.astro/
+
 # OS cruft
 Thumbs.db
 desktop.ini

@@ -1,0 +1,207 @@
+---
+/**
+ * Splash / cover page. The one surface where the emblem is largest and leads.
+ * Sits on the tint ground; the only full-tint surface on the site.
+ * Enter: a real link (first in tab order) plus click-anywhere for pointers.
+ */
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import mark from '../brand/originals/logo-mark.png';
+import InstagramIcon from '../components/InstagramIcon.astro';
+import { splash } from '../content/copy';
+import { SITE } from '../config';
+---
+
+<Base title={SITE.name} description={splash.metaDescription} isHome bodyClass="splash-body">
+  <main id="main" class="splash container fade-in" tabindex="-1">
+    <header class="splash-top">
+      <p class="eyebrow">{splash.topStrip}</p>
+      <p class="splash-contact meta">
+        <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+        <a class="ig" href={SITE.instagramUrl} rel="noopener" target="_blank">
+          <InstagramIcon />
+          <span>{SITE.instagramHandle}</span>
+        </a>
+      </p>
+    </header>
+    <hr class="rule" />
+
+    <section class="splash-stage grid">
+      <div class="splash-emblem">
+        <Image
+          src={mark}
+          alt="Young Medical Engineers emblem: a medical cross, the letters YME, and a gear"
+          widths={[335, 480, 620, 940, 1240]}
+          sizes="(max-width: 900px) calc(100vw - 40px), 620px"
+          loading="eager"
+          decoding="sync"
+          fetchpriority="high"
+        />
+      </div>
+      <div class="splash-text">
+        <h1 class="splash-name">{splash.name}</h1>
+        <p class="splash-subline">{splash.subline}</p>
+        <p class="splash-free">{splash.freeAlways}</p>
+      </div>
+    </section>
+
+    <footer class="splash-bottom">
+      <hr class="rule" />
+      <a class="enter" href="/mission/" data-enter>{splash.enterPrompt}</a>
+    </footer>
+  </main>
+</Base>
+
+<style>
+  :global(body.splash-body) {
+    background: var(--tint);
+  }
+
+  .splash {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  .splash:focus {
+    outline: none;
+  }
+
+  .splash-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1.5rem 2rem;
+    flex-wrap: wrap;
+    padding-block: 1.25rem 1rem;
+  }
+
+  .splash-contact {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .ig {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .splash-stage {
+    flex: 1 0 auto;
+    align-content: center;
+    row-gap: 2.5rem;
+    padding-block: 3rem;
+  }
+
+  .splash-emblem {
+    grid-column: 2 / 9;
+  }
+
+  .splash-emblem img {
+    width: 100%;
+    max-height: 38vh; /* keep the whole cover in view on short screens */
+    height: auto;
+    object-fit: contain;
+    object-position: left center;
+  }
+
+  .splash-text {
+    grid-column: 2 / 12;
+  }
+
+  .splash-name {
+    font-size: clamp(3rem, 1.5rem + 5vw, 6rem); /* 48 to 96px */
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    max-width: 8em;
+  }
+
+  .splash-subline {
+    margin-top: 1.5rem;
+    color: var(--muted);
+  }
+
+  .splash-free {
+    margin-top: 0.75rem;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.75rem;
+    line-height: 1.2;
+    color: var(--accent);
+  }
+
+  .splash-bottom {
+    padding-bottom: 1.25rem;
+  }
+
+  .enter {
+    display: inline-block;
+    padding-block: 1rem 0.25rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent-warm);
+  }
+
+  .enter:hover {
+    border-bottom-color: var(--accent);
+  }
+
+  :global(body.leaving) .splash {
+    opacity: 0;
+    transition: opacity 300ms ease-out;
+  }
+
+  @media (max-width: 900px) {
+    .splash-emblem,
+    .splash-text {
+      grid-column: 1 / -1;
+    }
+
+    .splash-stage {
+      row-gap: 2rem;
+      padding-block: 2rem;
+    }
+
+    .splash-top {
+      padding-block: 1rem 0.75rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(body.leaving) .splash {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const enter = document.querySelector<HTMLAnchorElement>('[data-enter]');
+  const target = enter?.getAttribute('href') ?? '/mission/';
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const go = () => {
+    if (document.body.classList.contains('leaving')) return;
+    document.body.classList.add('leaving');
+    window.setTimeout(() => window.location.assign(target), reduce ? 0 : 300);
+  };
+
+  // Click anywhere, except on links (which navigate themselves) or text selection.
+  document.addEventListener('click', (event) => {
+    const el = event.target as HTMLElement | null;
+    if (el?.closest('a, button')) return;
+    if (window.getSelection()?.toString()) return;
+    go();
+  });
+
+  // The enter link itself fades out first, then follows its href.
+  enter?.addEventListener('click', (event) => {
+    event.preventDefault();
+    go();
+  });
+</script>

@@ -1,0 +1,46 @@
+---
+import Page from '../layouts/Page.astro';
+import { about, meta } from '../content/copy';
+
+const numerals = ['01', '02', '03'];
+---
+
+<Page title="About" description={meta.about} eyebrow={about.eyebrow} heading={about.heading}>
+  <div class="container">
+    <section class="section grid">
+      <div class="c3-9">
+        <p class="deck">{about.intro}</p>
+      </div>
+    </section>
+
+    <section class="values ledger" aria-label="What we stand for">
+      {
+        about.values.map((value, i) => (
+          <div class="ledger-row grid">
+            <p class="numeral c1-2" aria-hidden="true">
+              {numerals[i]}
+            </p>
+            <h2 class="c3-6">{value.name}</h2>
+            <p class="c7-11">{value.text}</p>
+          </div>
+        ))
+      }
+    </section>
+  </div>
+</Page>
+
+<style>
+  .values {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 900px) {
+    .numeral {
+      font-size: 1.75rem;
+    }
+    .ledger-row h2 {
+      margin-bottom: 0.5rem;
+    }
+  }
+</style>

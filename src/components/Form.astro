@@ -1,0 +1,98 @@
+---
+/**
+ * Form shell shared by Tutoring, Volunteer and Contact.
+ * Fields are passed as children. Success and error messages are approved copy.
+ *
+ * TODO(forms): FORM_ENDPOINT in src/config.ts is null. Until it is set, every
+ * submit shows the error message, which points people to email.
+ */
+import { FORM_ENDPOINT, SITE } from '../config';
+import { shared } from '../content/copy';
+
+interface Props {
+  name: string; // form name sent with the submission
+  submitLabel: string;
+  successHeading: string;
+  success: string;
+  error: string;
+}
+
+const { name, submitLabel, successHeading, success, error } = Astro.props;
+const errorId = `${name}-error`;
+---
+
+<div class="form-shell" data-form-shell>
+  <form
+    class="form"
+    method="post"
+    action="#"
+    novalidate
+    data-form
+    data-endpoint={FORM_ENDPOINT ?? ''}
+    data-form-name={name}
+    aria-describedby={errorId}
+  >
+    <slot />
+    <div class="form-actions">
+      <button class="btn" type="submit">{submitLabel}</button>
+      <span class="meta">{shared.formNote}</span>
+    </div>
+    <p class="form-error" id={errorId} hidden data-form-error>
+      {error}
+    </p>
+    <noscript>
+      <p class="meta">
+        This form needs JavaScript. You can also email <a href={`mailto:${SITE.email}`}>{SITE.email}</a> directly.
+      </p>
+    </noscript>
+  </form>
+
+  <div class="form-done" role="status" tabindex="-1" hidden data-form-done>
+    <h2>{successHeading}</h2>
+    <p>{success}</p>
+  </div>
+</div>
+
+<script>
+  for (const form of document.querySelectorAll<HTMLFormElement>('[data-form]')) {
+    const shell = form.closest<HTMLElement>('[data-form-shell]');
+    const done = shell?.querySelector<HTMLElement>('[data-form-done]');
+    const error = form.querySelector<HTMLElement>('[data-form-error]');
+    const endpoint = form.dataset.endpoint || '';
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (error) error.hidden = true;
+
+      // Native constraint validation; the browser focuses the first invalid field.
+      if (!form.reportValidity()) return;
+
+      if (!endpoint) {
+        if (error) error.hidden = false;
+        return;
+      }
+
+      const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      if (submit) submit.disabled = true;
+      try {
+        const body = new FormData(form);
+        body.set('form', form.dataset.formName || '');
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          body,
+          headers: { Accept: 'application/json' },
+        });
+        if (!res.ok) throw new Error(String(res.status));
+        form.hidden = true;
+        if (done) {
+          done.hidden = false;
+          done.focus();
+        }
+      } catch {
+        if (error) error.hidden = false;
+      } finally {
+        if (submit) submit.disabled = false;
+      }
+    });
+  }
+</script>

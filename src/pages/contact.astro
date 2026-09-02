@@ -1,0 +1,78 @@
+---
+import Page from '../layouts/Page.astro';
+import Form from '../components/Form.astro';
+import Input from '../components/Input.astro';
+import Select from '../components/Select.astro';
+import { contact, meta } from '../content/copy';
+import { SITE } from '../config';
+
+const f = contact.form;
+const intro = contact.intro;
+---
+
+<Page title="Contact" description={meta.contact} eyebrow={contact.eyebrow} heading={contact.heading}>
+  <div class="container">
+    <section class="section grid form-page">
+      <div class="c3-6">
+        <p>
+          {intro.before}<a href={`mailto:${SITE.email}`}>{intro.email}</a>{intro.middle}<a
+            href={SITE.instagramUrl}
+            rel="noopener"
+            target="_blank">{intro.instagram}</a
+          >{intro.after}
+        </p>
+
+        <dl class="faq ledger">
+          {
+            contact.faq.map((item) => (
+              <div class="faq-item">
+                <dt>{item.q}</dt>
+                <dd>{item.a}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+
+      <div class="c8-12">
+        <Form
+          name="contact"
+          submitLabel={f.submit}
+          successHeading={f.successHeading}
+          success={f.success}
+          error={f.error}
+        >
+          <div class="form-row">
+            <Input id="c-name" name="Name" label={f.fields.name} autocomplete="name" />
+            <Input id="c-email" name="Email" label={f.fields.email} type="email" autocomplete="email" />
+          </div>
+          <Select id="c-topic" name="Topic" label={f.fields.topic} options={f.topicOptions} />
+          <Input id="c-msg" name="Message" label={f.fields.message} textarea />
+        </Form>
+      </div>
+    </section>
+  </div>
+</Page>
+
+<style>
+  .form-page {
+    row-gap: 2.5rem;
+  }
+
+  .faq {
+    margin-top: 2.5rem;
+  }
+
+  .faq-item {
+    padding-block: 1.25rem;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .faq dt {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 1.5rem;
+    line-height: 1.25;
+    margin-bottom: 0.5rem;
+  }
+</style>

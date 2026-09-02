@@ -1,0 +1,62 @@
+---
+/**
+ * Document shell: head metadata, self-hosted fonts, skip link.
+ * Inner pages use Page.astro (which wraps this with the masthead and footer);
+ * the splash at / uses this directly.
+ */
+import '@fontsource-variable/newsreader/opsz.css';
+import '@fontsource-variable/newsreader/opsz-italic.css';
+import '@fontsource-variable/source-sans-3';
+import '../styles/global.css';
+import { SITE } from '../config';
+import { shared } from '../content/copy';
+
+interface Props {
+  title: string; // page title without the site name
+  description: string;
+  bodyClass?: string;
+  isHome?: boolean;
+}
+
+const { title, description, bodyClass, isHome = false } = Astro.props;
+const fullTitle = isHome ? SITE.name : `${title} · ${SITE.name}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL('/brand/og.png', Astro.site);
+---
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#f6f5f3" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Young Medical Engineers logo" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/brand/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/brand/favicon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/brand/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <script is:inline>
+      document.documentElement.classList.replace('no-js', 'js');
+    </script>
+  </head>
+  <body class={bodyClass}>
+    <a class="skip-link" href="#main">{shared.skipLink}</a>
+    <slot />
+  </body>
+</html>

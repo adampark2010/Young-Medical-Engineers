@@ -2,10 +2,13 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "yme-site",
-      "runtimeExecutable": "py",
-      "runtimeArgs": ["-m", "http.server", "8737"],
-      "port": 8737
+      "name": "astro-dev",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": [
+        "/c",
+        "set PATH=%LOCALAPPDATA%\\Programs\\nodejs-extract\\PFiles64\\nodejs;C:\\Program Files\\nodejs;%PATH% && npm run dev -- --host 127.0.0.1 --port 4321"
+      ],
+      "port": 4321
     }
   ]
 }
