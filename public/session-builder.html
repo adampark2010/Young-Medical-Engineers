@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session Builder · Young Medical Engineers</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/sessions.js" defer></script>
+<script src="assets/builder.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container header__inner">
+    <a class="brand" href="index.html"><img src="assets/logo-full.png" alt="Young Medical Engineers" width="1872" height="402"></a>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+<section class="section">
+  <div class="container">
+    <div class="builder__intro">
+      <p class="eyebrow">Staff Tool</p>
+      <h1>Session Builder</h1>
+      <p class="lede">Usually, add sessions on the admin page at <a href="/admin">/admin</a>: they go live straight away, and sign-ups are saved for you there. Use this builder only as a backup when the site runs without its server. It writes sessions.json, the file Upcoming Sessions reads, for you to paste into GitHub. Sign-ups for these sessions arrive by email.</p>
+    </div>
+
+    <div class="builder__grid">
+      <form class="form-card" id="builder" novalidate>
+        <h2>New Session</h2>
+        <div class="field">
+          <label for="b-type">Type</label>
+          <select id="b-type" required>
+            <option value="" selected disabled>Choose&hellip;</option>
+            <option>Talk</option>
+            <option>Hands-On Demo</option>
+            <option>Design Challenge</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="b-title">Title</label>
+          <input id="b-title" type="text" placeholder="Build a Working Stethoscope" required>
+        </div>
+        <div class="fgrid">
+          <div class="field">
+            <label for="b-date">Date</label>
+            <input id="b-date" type="date" required>
+          </div>
+          <div class="field">
+            <label for="b-start">Start Time</label>
+            <input id="b-start" type="time" required>
+          </div>
+          <div class="field">
+            <label for="b-end">End Time (optional)</label>
+            <input id="b-end" type="time">
+          </div>
+        </div>
+        <fieldset class="builder__choices">
+          <legend>Where</legend>
+          <label><input type="radio" name="where" value="place" checked> In person</label>
+          <label><input type="radio" name="where" value="online"> Online</label>
+        </fieldset>
+        <div class="builder__place" id="b-place-fields">
+          <div class="field">
+            <label for="b-place">Place Name</label>
+            <input id="b-place" type="text" placeholder="Dunlap Public Library">
+          </div>
+          <div class="fgrid">
+            <div class="field">
+              <label for="b-street">Street Address</label>
+              <input id="b-street" type="text" placeholder="302 S 1st St">
+            </div>
+            <div class="field">
+              <label for="b-town">Town and State</label>
+              <input id="b-town" type="text" placeholder="Dunlap, IL">
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label for="b-desc">One-Line Description (optional)</label>
+          <textarea id="b-desc" placeholder="What students will do, in one sentence."></textarea>
+        </div>
+      </form>
+
+      <div class="builder__out">
+        <h2>Preview</h2>
+        <ol class="sessions builder__preview" id="b-preview" inert></ol>
+        <p class="builder__msg" id="b-msg" role="status" aria-live="polite"></p>
+        <h2>Already in sessions.json</h2>
+        <p class="form-note" id="b-current-note">Reading sessions.json&hellip;</p>
+        <ul class="admin-list" id="b-current"></ul>
+        <h2>New sessions.json</h2>
+        <textarea class="builder__code" id="b-code" readonly aria-label="The new contents of sessions.json"></textarea>
+        <div class="form-actions">
+          <button class="btn btn--primary" type="button" id="b-copy">Copy</button>
+          <a class="btn btn--secondary" id="b-edit" href="#" target="_blank" rel="noopener">Open sessions.json on GitHub<span class="sr-only"> (opens in a new tab)</span></a>
+          <span class="form-note" id="b-copied" role="status" aria-live="polite"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="builder__steps">
+      <h2>How to Publish It</h2>
+      <ol>
+        <li>Fill in the new session and check the preview. To take sessions off instead, untick them under <strong>Already in sessions.json</strong> (you can leave the form empty).</li>
+        <li>Check that <strong>Already in sessions.json</strong> lists every session you expect. If you published a change in the last few minutes and it isn't there yet, wait and reload this page, or that change would be lost.</li>
+        <li>Click <strong>Copy</strong>.</li>
+        <li>Click <strong>Open sessions.json on GitHub</strong> and sign in with an account that can edit the site. If the file opens for reading, click the pencil icon (Edit this file).</li>
+        <li>Select everything in the file (<strong>Ctrl+A</strong>, or <strong>Cmd+A</strong> on a Mac) and paste, so the copied text replaces it all.</li>
+        <li>Click <strong>Commit changes&hellip;</strong>, write a short message such as "Add session: Build a Working Stethoscope", and commit.</li>
+        <li>Once the site is published, the session shows on Upcoming Sessions with its own sign-up page, and hides itself the day after it happens. Sign-ups for it arrive in the YME inbox.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+</main>
+
+</body>
+</html>
