@@ -6,7 +6,7 @@
   "use strict";
 
   /* where staff edit the list (change if the site is published from another repository) */
-  var EDIT_URL = "https://github.com/dxianto8/yme_personal_derrick_xianto/edit/main/public/sessions.json";
+  var EDIT_URL = "https://github.com/adampark2010/Young-Medical-Engineers/edit/main/public/sessions.json";
 
   var S = window.YMESessions;
   var $ = function (id) { return document.getElementById(id); };

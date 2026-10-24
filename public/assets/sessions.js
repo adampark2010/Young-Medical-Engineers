@@ -151,7 +151,7 @@
         .then(function (data) { return (data && data.sessions) || []; })
         .catch(function () { return null; });
     };
-    return Promise.all([get("/api/sessions"), get("/sessions.json")]).then(function (sources) {
+    return Promise.all([get("api/sessions"), get("sessions.json")]).then(function (sources) {
       var byId = {}, all = [];
       sources.forEach(function (list, i) {
         (list || []).forEach(function (raw) {
