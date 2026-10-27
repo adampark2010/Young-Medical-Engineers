@@ -76,7 +76,7 @@
        Sessions from sessions.json (the no-server backup) aren't in the database, so those go by email only. */
     function save(entry) {
       if (session && session.source === "file") return Promise.resolve(false);
-      return fetch("/api/signups", {
+      return fetch("api/signups", {
         method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(entry)
       }).then(function (r) {
         if (r.ok) return true;
