@@ -1,5 +1,5 @@
 /* Local version of the YME website: serves public/ and runs the same sessions API and
-   admin page as Vercel, with sessions saved in data/sessions.sqlite instead of Neon.
+   admin page as Cloudflare (worker.js), with sessions saved in data/sessions.sqlite instead of Neon.
    Run: node server.mjs   then visit http://127.0.0.1:3000 (admin page: /admin). */
 import { createServer } from 'node:http';
 import { readFile, mkdir, stat } from 'node:fs/promises';
@@ -33,7 +33,7 @@ const TYPES = {
   '.json': 'application/json; charset=utf-8', '.xml': 'application/xml; charset=utf-8', '.txt': 'text/plain; charset=utf-8', '.md': 'text/plain; charset=utf-8'
 };
 
-/* Node request -> standard Request, so the Vercel handlers run unchanged. */
+/* Node request -> standard Request, so the Cloudflare handlers run unchanged. */
 function toRequest(req) {
   const headers = new Headers();
   for (let i = 0; i < req.rawHeaders.length; i += 2) headers.append(req.rawHeaders[i], req.rawHeaders[i + 1]);

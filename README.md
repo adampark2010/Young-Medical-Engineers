@@ -3,7 +3,15 @@
 The website's ready-to-publish HTML, styles, images and fonts live in `public/`.
 There is no frontend build step.
 
-## Publish on GitHub Pages
+## Moving to Cloudflare
+
+The site is moving from GitHub Pages to Cloudflare Workers, which also runs the
+`/admin` session manager and saves sign-ups in a Neon database. `worker.js` and
+`wrangler.jsonc` hold the Cloudflare setup. Follow
+[CLOUDFLARE-SETUP.md](CLOUDFLARE-SETUP.md) step by step. GitHub Pages keeps
+serving the site until its last steps, so nothing goes offline in between.
+
+## Publish on GitHub Pages (until the move)
 
 1. In `adampark2010/Young-Medical-Engineers`, open **Settings → Pages**.
 2. Under **Build and deployment**, set **Source** to **GitHub Actions**.
@@ -41,8 +49,8 @@ triggers another deployment. Sessions from this file and other forms send email
 through FormSubmit; the inbox owner must activate FormSubmit for the live domain
 when prompted. There is no database signup list or admin login on Pages.
 
-For server-backed administration and database signups, use the separate
-[Vercel and Neon instructions](VERCEL-SETUP.md).
+For server-backed administration and database signups, use the
+[Cloudflare and Neon instructions](CLOUDFLARE-SETUP.md).
 
 ## Local development
 
@@ -57,3 +65,5 @@ npm test
 `npm start` runs the local server with SQLite in the ignored `data/` directory.
 To preview exactly the static folder that Pages publishes, run
 `python3 -m http.server 8080 --directory public` instead.
+`npm run preview` runs the real Cloudflare Worker at http://localhost:8787; it
+reads its settings from a `.dev.vars` file (see CLOUDFLARE-SETUP.md).

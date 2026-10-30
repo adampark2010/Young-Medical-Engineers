@@ -2,16 +2,17 @@ Young Medical Engineers website - developer notes (October 2026)
 
 WHAT THIS IS
 Plain HTML pages, one stylesheet and images in public/, plus a small server for the
-session manager, built the same way as Lunch: two Vercel functions in api/ and a Neon
-Postgres database. No framework and no build step. To run it on your computer:
+session manager: a Cloudflare Worker (worker.js) and a Neon Postgres database. No
+framework and no build step. To run it on your computer:
   npm ci
   npm start          then visit http://127.0.0.1:3000 (session manager: /admin)
 npm start runs server.mjs with a local SQLite database in data/ and prints a
-temporary admin login. npm test runs the server tests. VERCEL-SETUP.md explains
-how to put it online.
+temporary admin login. npm test runs the server tests. npm run preview runs the
+real Cloudflare Worker locally (see CLOUDFLARE-SETUP.md). CLOUDFLARE-SETUP.md
+explains how to put it online.
 
 FILES
-Pages and images (public/, the folder Vercel publishes):
+Pages and images (public/, the folder Cloudflare publishes):
 index.html        Home: photo hero, Who We Are, What We Do, Coming Up (the next three
                   sessions, or a Get Notified line when none), Free. Always. band,
                   Our Impact So Far (the three numbers), Get Involved, footer
@@ -49,17 +50,21 @@ assets/logo-*.png Logo files (recoloured brand set); logo-*-dark.png are for dar
 assets/logo-original/  The untouched original logo PNGs (old red cross; do not use)
 assets/photo-*.jpg     Page photos (small web copies; larger originals welcome)
 assets/og-card.jpg     1200x630 image used for social-media link previews
-CNAME             Custom domain for GitHub Pages (www.medengineers.org). Vercel ignores it.
+CNAME             Custom domain for GitHub Pages (www.medengineers.org). Cloudflare ignores it.
 robots.txt, sitemap.xml   Search-engine files; update sitemap.xml if pages are added
 
 Server (top level, next to public/):
-api/sessions.js   /api/sessions: anyone can read upcoming sessions; signed-in admins
+worker.js         The Cloudflare Worker. It answers three addresses and leaves every
+                  other one to the files in public/:
+                  /api/sessions: anyone can read upcoming sessions; signed-in admins
                   add (POST) them, and delete (DELETE) several at once with the
                   separate delete password
-api/signups.js    /api/signups: anyone signs up from the website (POST); signed-in admins
-                  list sign-ups (GET) and delete them with the delete password
-api/admin.js      /admin: asks for an admin sign-in, then shows the session manager
-lib/              The code behind them: sign-in and the delete password (auth.js),
+                  /api/signups: anyone signs up from the website (POST); signed-in
+                  admins list sign-ups (GET) and delete them with the delete password
+                  /admin: asks for an admin sign-in, then shows the session manager
+                  It also serves index.html at /, because pages keep their .html
+                  addresses (html_handling "none" in wrangler.jsonc).
+lib/              The code behind it: sign-in and the delete password (auth.js),
                   request helpers (http.js), sessions (sessions.js), sign-ups
                   (signups.js), the /admin page (admin.js, admin-page.js), the Neon
                   database (database.js) and the local SQLite one (sqlite-store.js)
@@ -67,9 +72,12 @@ db/schema.sql     Creates the sessions and signups tables; run it in Neon (again
                   any update that adds a table; it never erases anything)
 tests/            npm test (uses a simulated database, never Neon)
 server.mjs        Local server for npm start (SQLite in data/, not Neon)
-package.json, package-lock.json, vercel.json   Node 24, the Neon driver, and Vercel's
-                  settings (publish public/, send /admin to api/admin.js)
-VERCEL-SETUP.md   Step-by-step setup on Vercel and Neon, and moving medengineers.org
+wrangler.jsonc    Cloudflare's settings: publish public/, run worker.js for /, /api/*
+                  and /admin, and turn on Node compatibility (node:crypto, Buffer)
+package.json, package-lock.json   Node 24, the Neon driver, and wrangler (Cloudflare's
+                  tool, for npm run preview and deploying)
+CLOUDFLARE-SETUP.md   Step-by-step setup on Cloudflare and Neon, and moving
+                  medengineers.org
 
 HOW THINGS WORK
 - Header, navigation and footer are repeated in every page. A change to them must be
@@ -136,11 +144,11 @@ HOW THINGS WORK
   seamless.
 - To add a session, go to /admin, sign in with your own admin login, fill in the
   form and click Add to Website. It shows on Upcoming Sessions straight away. Each
-  admin has their own username and password, set in Vercel as ADMIN_LOGINS (see
-  VERCEL-SETUP.md); the list on /admin shows who added what. Everything typed is
+  admin has their own username and password, set in Cloudflare as ADMIN_LOGINS (see
+  CLOUDFLARE-SETUP.md); the list on /admin shows who added what. Everything typed is
   shown as plain text, never as HTML.
 - To delete sessions, tick them in the list on /admin (or Select all), click Delete
-  Selected, and type the delete password. That is a separate password set in Vercel
+  Selected, and type the delete password. That is a separate password set in Cloudflare
   as DELETE_PASSWORD, like Lunch's clear password: only people who know it can
   delete, and without it deleting is switched off. Deleting can't be undone.
 - Upcoming Sessions: visitors filter by type and by in person or online (the choice
@@ -168,5 +176,6 @@ HOW THINGS WORK
   visible number and the data-count value).
 
 PUBLISHING
-The site runs on Vercel with a Neon database: see VERCEL-SETUP.md. Logins and the
-database connection are set in Vercel's settings, never in these files.
+The site runs on Cloudflare Workers with a Neon database: see CLOUDFLARE-SETUP.md.
+Logins and the database connection are set as secrets in Cloudflare's settings, never
+in these files. Every push to main deploys the site.
