@@ -1,0 +1,79 @@
+{
+  "_comment": "Links out to other people's work, newest first. Two lists: \"articles\" and \"podcasts\". \"image\" is a file in assets/news/ OR a full URL, and \"credit\" captions it; omit both for a text card. Prefer a local copy in assets/news/ — a linked image breaks if the source moves it. The NIH one below is linked because nih.gov refuses command-line downloads; save it by hand and switch the path when convenient. Only use images you may: YME's own, licensed, or public domain work by US federal agencies (NSF, NIH, NASA, FDA).",
+  "articles": [
+    {
+      "title": "Device helps people with paralysis communicate",
+      "source": "NIH",
+      "date": "2026-10-07",
+      "url": "https://www.nih.gov/news-events/nih-research-matters/device-helps-people-paralysis-communicate",
+      "note": "A brain-computer interface that lets someone speak and gesture through an avatar at the same time.",
+      "image": "https://www.nih.gov/sites/default/files/2026-10/20261006-speech.png",
+      "credit": "Image: NIH"
+    },
+    {
+      "title": "Improving lung cancer detection",
+      "source": "NIH",
+      "date": "2026-10-07",
+      "url": "https://www.nih.gov/news-events/nih-research-matters/improving-lung-cancer-detection",
+      "note": "A protein-based MRI contrast agent, which is a chemistry problem solved to make an imaging problem easier.",
+      "image": "https://www.nih.gov/sites/default/files/2026-10/20261007-mri.jpg",
+      "credit": "Image: NIH"
+    },
+    {
+      "title": "Innovative imaging tool could improve diagnosis and treatment of hearing loss",
+      "source": "USC Keck",
+      "date": "2025-08-04",
+      "url": "https://keck.usc.edu/news/innovative-imaging-tool-could-improve-diagnosis-and-treatment-of-hearing-loss/",
+      "note": "Optical coherence tomography used during surgery to see inside the inner ear, one of the harder parts of the body to image.",
+      "image": "https://keck.usc.edu/news/wp-content/uploads/sites/68/2025/07/OCT.png",
+      "credit": "Photo: John Oghalai / USC"
+    },
+    {
+      "title": "Smart bandage clears new hurdle: monitors chronic wounds in human patients",
+      "source": "Caltech",
+      "date": "2025-04-24",
+      "url": "https://www.caltech.edu/about/news/smart-bandage-clears-new-hurdle-monitors-chronic-wounds-in-human-patients",
+      "note": "The iCares bandage samples a wound and reads it with on-board sensors, now tested on patients rather than in a lab.",
+      "image": "https://caltech-prod.resources.caltech.edu/main/images/Gao_Wei-Fan_Kexin-Wang_Canran-Smart-B.47615696.width-600.jpg",
+      "credit": "Credit: Caltech"
+    }
+  ],
+  "podcasts": [
+    {
+      "title": "The future of electronics goes beyond circuit boards",
+      "source": "NSF",
+      "date": "2026-10-27",
+      "url": "https://www.nsf.gov/news/podcast-future-electronics-goes-beyond-circuit-boards",
+      "image": "assets/news/nsf-flexible-electronics.jpg",
+      "credit": "Image: NSF",
+      "note": "Stretchable electronics, the groundwork for sensors that sit on skin rather than in a box."
+    },
+    {
+      "title": "The hidden DNA code that controls your genes",
+      "source": "NSF",
+      "date": "2026-10-13",
+      "url": "https://www.nsf.gov/news/podcast-hidden-dna-code-controls-your-genes",
+      "image": "assets/news/nsf-dna-code.jpg",
+      "credit": "Image: NSF",
+      "note": "The regulatory layer above the genome, and where a lot of drug discovery now starts."
+    },
+    {
+      "title": "Could holographic 3D printing be real?",
+      "source": "NSF",
+      "date": "2026-10-06",
+      "url": "https://www.nsf.gov/news/podcast-could-holographic-3d-printing-be-real",
+      "image": "assets/news/nsf-3d-printing.jpg",
+      "credit": "Image: NSF",
+      "note": "Printing a whole object at once instead of layer by layer, which changes how devices get made."
+    },
+    {
+      "title": "Can prosthetic limbs feel touch?",
+      "source": "NSF",
+      "date": "2026-09-21",
+      "url": "https://www.nsf.gov/news/podcast-can-prosthetic-limbs-feel-touch-haptic-feedback",
+      "image": "assets/news/nsf-haptic-prosthetics.jpg",
+      "credit": "Image: NSF",
+      "note": "Building haptic feedback into upper-limb prosthetics, so a hand can report what it is touching."
+    }
+  ]
+}
