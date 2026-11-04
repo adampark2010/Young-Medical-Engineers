@@ -92,5 +92,16 @@ test('form setup problems give clear messages', async () => {
   assert.match((await (await broken(request('POST', { body: tutoring() }))).json()).error, /schema\.sql/);
   const denied = createFormsHandler({ env, storeFactory: () => ({ addFormSubmission() { throw Object.assign(new Error('x'), { code: '42501' }); } }) });
   assert.match((await (await denied(request('POST', { body: tutoring() }))).json()).error, /Run db\/schema\.sql again/);
+  const { createStore } = await import('../lib/database.js');
+  const wrongUrl = createFormsHandler({ env: { ...env, DATABASE_URL: '9s432o44HuMsecret' }, storeFactory: createStore });
+  const logged = [];
+  const realError = console.error;
+  console.error = (...args) => logged.push(args.join(' '));
+  try {
+    const answer = await wrongUrl(request('POST', { body: tutoring() }));
+    assert.equal(answer.status, 503);
+    assert.match((await answer.json()).error, /full connection string/);
+  } finally { console.error = realError; }
+  assert.ok(!logged.join(' ').includes('9s432o44HuMsecret'), 'the value is never logged');
   assert.equal((await setup().handler(new Request(`${SITE}/api/forms`, { method: 'PUT' }))).status, 405);
 });
