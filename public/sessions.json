@@ -1,17 +1,3 @@
 {
-  "sessions": [
-    {
-      "id": "built-for-the-body-2026-12-23",
-      "type": "Talk",
-      "title": "Built for the Body",
-      "date": "2026-12-23",
-      "start": "14:00",
-      "end": "15:30",
-      "online": false,
-      "place": "Peoria Public Library",
-      "street": "",
-      "town": "Peoria, IL",
-      "description": "A winter break talk introducing medical engineering: the field behind prosthetics, imaging, drug discovery and the devices clinicians rely on. People who do the work explain what the job involves and how they got there. No background needed."
-    }
-  ]
+  "sessions": []
 }
