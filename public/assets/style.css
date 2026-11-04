@@ -53,7 +53,7 @@
   /* shape and depth: square corners everywhere, hairline borders, warm shadow */
   --radius-xs:  0;
   --radius-sm:  0;
-  --radius-btn: 0;
+  --radius-btn: 5px; /* buttons: small, crisp corners */
   --radius:     0;
   --radius-lg:  0;
   --radius-xl:  0;
@@ -172,12 +172,16 @@ main:focus{ outline:none; }
 .btn:hover{ transform:translateY(-1px); }
 .btn:active{ transform:scale(.98); }
 .btn .icon{ width:18px; height:18px; }
-.btn--primary{ background:var(--accent); color:#fff; }
-.btn--primary:hover{ background:var(--accent-hover); color:#fff; box-shadow:var(--shadow-md); }
+/* buttons are navy, never red: solid for the main action, outlined for the second */
+.btn--primary{ background:var(--brand-navy); border-color:var(--brand-navy); color:#fff; }
+.btn--primary:hover{ background:#132845; border-color:#132845; color:#fff; box-shadow:var(--shadow-md); }
 .btn--navy{ background:var(--primary-deep); color:#fff; }
 .btn--navy:hover{ background:var(--primary); color:#fff; box-shadow:var(--shadow-md); }
-.btn--secondary{ background:transparent; color:var(--primary-deep); border-color:var(--primary-deep); }
-.btn--secondary:hover{ background:var(--primary-deep); color:#fff; }
+.btn--secondary{ background:transparent; color:var(--brand-navy); border-color:var(--brand-navy); }
+.btn--secondary:hover{ background:var(--brand-navy); color:#fff; }
+/* on the dark header, bands and session cards navy would disappear, so the main button is white there */
+.site-header .btn--primary,.session .btn--primary,.cta-band .btn--primary,.section--black .btn--primary,.hero .btn--primary{ background:#fff; border-color:#fff; color:var(--brand-navy); }
+.site-header .btn--primary:hover,.session .btn--primary:hover,.cta-band .btn--primary:hover,.section--black .btn--primary:hover,.hero .btn--primary:hover{ background:#E6ECF4; border-color:#E6ECF4; color:var(--brand-navy); }
 .btn--light{ background:#fff; color:var(--primary-deep); }
 .btn--light:hover{ background:var(--tint); color:var(--primary-deep); }
 .btn--ghost-light{ background:transparent; color:#fff; border-color:rgba(255,255,255,.6); }
