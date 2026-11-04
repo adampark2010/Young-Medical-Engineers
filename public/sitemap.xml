@@ -12,4 +12,6 @@
   <url><loc>https://www.medengineers.org/terms.html</loc><priority>0.3</priority></url>
   <url><loc>https://www.medengineers.org/accessibility.html</loc><priority>0.3</priority></url>
   <url><loc>https://www.medengineers.org/donation-policy.html</loc><priority>0.3</priority></url>
+  <url><loc>https://www.medengineers.org/curriculum.html</loc><priority>0.8</priority></url>
+  <url><loc>https://www.medengineers.org/updates.html</loc><priority>0.7</priority></url>
 </urlset>

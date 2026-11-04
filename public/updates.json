@@ -1,0 +1,20 @@
+{
+  "_comment": "Our own news, newest first: events we ran, people we met, what's coming up. See ADDING-ARTICLES.md. Each update needs an id (lowercase words and dashes, used in its link: updates.html#the-id), a title, a date (YYYY-MM-DD) and body (a list of paragraphs). Optional: kind (a short label such as Event or Advocacy), image (a file in assets/updates/) with alt (what the photo shows) and credit, and links (each with text and href).",
+  "updates": [
+    {
+      "id": "built-for-the-body",
+      "kind": "Event",
+      "title": "Built for the Body: A Free Talk in Peoria This Winter Break",
+      "date": "2026-11-04",
+      "body": [
+        "On Wednesday 23 December, from 2:00 to 3:30 pm, we're holding Built for the Body, a free talk at Peoria Public Library that introduces students to medical engineering.",
+        "Most people never hear of medical engineering until they are already in college. It is the field behind prosthetics, medical imaging, drug discovery and the devices clinicians rely on. At the talk, people who do the work will explain what the job involves and how they got there.",
+        "It's free, all students are welcome, and no background is needed. Save a seat on our Programs page, and pass the flyer on to anyone who might like to come."
+      ],
+      "links": [
+        { "text": "Save a Seat", "href": "programs.html#sessions" },
+        { "text": "Download the Flyer (PDF)", "href": "assets/flyers/built-for-the-body.pdf" }
+      ]
+    }
+  ]
+}

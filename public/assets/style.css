@@ -272,6 +272,9 @@ main:focus{ outline:none; }
   .site-nav .subnav{ display:none; padding:0 0 .25rem .75rem; }
   .has-sub.is-open > .subnav{ display:block; }
   .site-nav .subnav li a{ min-height:44px; font-size:.98rem; }
+  /* in the phone menu the dropdowns open inside the dark panel, so their links are light too */
+  .site-header .site-nav .subnav a{ color:rgba(255,255,255,.78); }
+  .site-header .site-nav .subnav a:hover{ color:#fff; }
   .site-nav .btn{ width:100%; margin-top:.75rem; }
 }
 @media (min-width: 1024px){
@@ -1015,3 +1018,40 @@ body > .site-footer{ flex-shrink:0; }
 .gallery img{ width:100%; aspect-ratio:3/2; object-fit:cover; object-position:center 32%; display:block; background:rgba(255,255,255,.08); }
 .gallery figcaption{ margin-top:.45rem; font-size:.85rem; color:var(--muted); }
 .section--black .gallery figcaption{ color:rgba(255,255,255,.7); }
+
+/* ---- tutoring curriculum (curriculum.html) ---------------------------- */
+/* numbered steps: how tutoring works, and a path through the grades */
+.steps{ list-style:none; display:grid; gap:1.75rem; max-width:68rem; margin:clamp(1.5rem, 3vw, 2.25rem) auto 0; }
+@media (min-width: 760px){ .steps{ grid-template-columns:repeat(3, minmax(0,1fr)); gap:2rem 2.5rem; } }
+@media (min-width: 760px){ .steps--four{ grid-template-columns:repeat(2, minmax(0,1fr)); } }
+@media (min-width: 1100px){ .steps--four{ grid-template-columns:repeat(4, minmax(0,1fr)); } }
+.steps li{ display:grid; gap:.45rem; align-content:start; }
+.steps h3{ font-size:1.2rem; }
+.steps p{ color:var(--muted); }
+.section--black .steps p{ color:rgba(255,255,255,.78); }
+.section--black .steps .pillar__num{ color:var(--accent-light); }
+/* one card per subject */
+.subjects{ list-style:none; display:grid; gap:1.25rem; margin-top:clamp(1.5rem, 3vw, 2.25rem); }
+@media (min-width: 760px){ .subjects{ grid-template-columns:repeat(2, minmax(0,1fr)); } }
+@media (min-width: 1100px){ .subjects{ grid-template-columns:repeat(3, minmax(0,1fr)); } }
+.subject{ display:grid; gap:1rem; align-content:start; padding:clamp(1.25rem, 2.5vw, 1.75rem); background:var(--surface); border:1px solid var(--border); }
+.subject h3{ font-size:1.3rem; }
+.subject__level{ margin-bottom:.35rem; font-size:.78rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); }
+.subject .facts{ margin-top:0; }
+.subject__use{ padding-top:1rem; border-top:1px solid var(--border); font-size:.95rem; color:var(--muted); }
+.subject__use strong{ color:var(--ink); }
+.section__foot--center{ justify-content:center; }
+.list-check--center{ width:fit-content; max-width:100%; margin-inline:auto; }
+
+/* ---- our updates (updates.html) ------------------------------------------- */
+.posts{ display:grid; gap:1.5rem; max-width:46rem; margin-inline:auto; }
+.post{ padding:clamp(1.5rem, 4vw, 2.75rem); background:var(--surface); border:1px solid var(--border); scroll-margin-top:calc(var(--header-h) + 1.5rem); }
+.post__meta{ display:flex; flex-wrap:wrap; gap:.35rem 1rem; margin-bottom:.7rem; font-size:.78rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+.post__kind{ color:var(--accent); }
+.post h2{ font-size:clamp(1.6rem, 3vw, 2.25rem); }
+.post__media{ margin:1.5rem 0 0; }
+.post__media img{ display:block; width:100%; height:auto; background:var(--tint); }
+.post__media figcaption{ margin-top:.45rem; font-size:.85rem; color:var(--muted); }
+.post__body{ margin-top:1.25rem; }
+.post__body p{ max-width:none; }
+.post__links{ display:flex; flex-wrap:wrap; gap:.75rem; margin-top:1.5rem; }

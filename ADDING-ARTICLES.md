@@ -1,3 +1,46 @@
+# Adding one of our own updates
+
+**Our Updates** (`updates.html`) is YME's own news: an event we ran, a meeting
+with a legislator, a new school we are working with, what is coming up. Each
+update is an entry in `public/updates.json`. Add a new one at the top of the
+`"updates"` list (the page sorts by date anyway, newest first):
+
+    {
+      "id": "meeting-representative-smith",
+      "kind": "Advocacy",
+      "title": "We Met Representative Smith About STEM in Schools",
+      "date": "2026-11-20",
+      "image": "assets/updates/representative-smith.jpg",
+      "alt": "Four YME board members with Representative Smith in her office",
+      "credit": "Photo: Young Medical Engineers",
+      "body": [
+        "First paragraph: what happened, who was there, when and where.",
+        "Second paragraph: why it matters for students.",
+        "Optional third paragraph: what happens next, or how to get involved."
+      ],
+      "links": [
+        { "text": "Read the Bill", "href": "https://..." }
+      ]
+    }
+
+(The names in that example are made up; write about what really happened.)
+
+- `id`: lowercase words and dashes. The update's own link is
+  `updates.html#` followed by the id, handy for Instagram and emails.
+- `kind`: a short label shown above the title, such as `Event`, `Advocacy`,
+  `Partnership` or `Milestone`. Optional.
+- `date`: the day it happened or was posted, as `YYYY-MM-DD`.
+- `body`: one string per paragraph. Plain text only; no HTML.
+- `image`, `alt`, `credit`: optional. Put the photo in
+  `public/assets/updates/`, about 1600 pixels wide. `alt` says what is in the
+  picture for anyone who cannot see it. Only use photos you may: your own,
+  with permission from everyone recognisable in them (and from a parent for
+  students under 18).
+- `links`: optional buttons under the update. The first one is red, the
+  rest are outlined. Links to other sites open in a new tab.
+
+Keep it factual: only write what the team can confirm.
+
 # Adding a news link
 
 The Articles page is two curated lists of other people's work, both read from

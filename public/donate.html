@@ -35,12 +35,24 @@
     <nav id="site-nav" class="site-nav" aria-label="Primary">
       <ul>
         <li><a href="about.html">About</a></li>
-        <li><a href="programs.html">Programs</a></li>
-        <li><a href="articles.html">Articles</a></li>
+        <li class="has-sub">
+          <button class="subnav-toggle" type="button" aria-expanded="false" aria-controls="sub-programs">Programs <svg class="icon icon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+          <ul class="subnav" id="sub-programs">
+            <li><a href="programs.html">All Programs</a></li>
+            <li><a href="curriculum.html">Tutoring Curriculum</a></li>
+            <li><a href="tutoring.html">Request a Tutor</a></li>
+          </ul>
+        </li>
+        <li class="has-sub">
+          <button class="subnav-toggle" type="button" aria-expanded="false" aria-controls="sub-articles">Articles <svg class="icon icon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+          <ul class="subnav" id="sub-articles">
+            <li><a href="articles.html">In the News</a></li>
+            <li><a href="updates.html">Our Updates</a></li>
+          </ul>
+        </li>
         <li class="has-sub">
           <button class="subnav-toggle" type="button" aria-expanded="false" aria-controls="sub-involved">Get Involved <svg class="icon icon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
           <ul class="subnav" id="sub-involved">
-            <li><a href="tutoring.html">Request a Tutor</a></li>
             <li><a href="volunteer.html">Volunteer With Us</a></li>
             <li><a href="contact.html">Send a Message</a></li>
           </ul>

@@ -19,6 +19,12 @@ index.html        Home: photo hero, Who We Are, What We Do, Coming Up (the next 
 about.html        About Us: Why We Do This, What We Believe, Where You'll Find Us / How It
                   Works, board banner, Join Us
 programs.html     Building Interest, Supporting Students, Expanding Our Reach
+curriculum.html   Tutoring Curriculum: how tutoring works, what each subject covers by level,
+                  and a path through the grades (linked from the Programs menu and
+                  Request a Tutor)
+updates.html      Our Updates: YME's own news (events, meetings, milestones), drawn by
+                  assets/updates.js from updates.json; ADDING-ARTICLES.md explains how
+                  to add one. Photos for it go in assets/updates/.
 board.html        Executive Board: founder story + nine member cards with headshots
 tutoring.html     Free tutoring request form
 sessions.html     Upcoming Sessions: filters (type, in person or online), sessions
