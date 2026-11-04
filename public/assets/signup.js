@@ -50,6 +50,9 @@
       card.querySelector("h2").textContent = "Your Details";
       $("su-intro").textContent = "It's free, and it only takes a moment.";
       go.textContent = "Notify Me";
+      /* the parent-permission box is for signing up to a session, not for joining the email list */
+      $("su-permission-field").hidden = true;
+      $("su-permission").disabled = true;
       card.hidden = false;
       document.title = "Get Notified · Young Medical Engineers";
     } else {
@@ -92,6 +95,7 @@
         _subject: "YME website: " + (session ? "Session sign-up" : "Tell me when new sessions open"),
         _template: "table", _replyto: entry.email
       };
+      if (session) data.Permission = entry.permission ? "Yes: 18 or older, or a parent or guardian has given permission" : "No";
       return fetch("https://formsubmit.co/ajax/" + INBOX, {
         method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(data)
       }).then(function (r) { return r.ok; }).catch(function () { return false; });
@@ -130,7 +134,8 @@
       pendingId = pendingId || uuid(); /* the same id on a retry, so the sign-up is never saved twice */
       var entry = {
         id: pendingId, session: session ? session.id : null, name: $("su-name").value.trim(), email: $("su-email").value.trim(),
-        grade: $("su-grade").value, note: $("su-note").value.trim(), _honey: $("su-hp").value
+        grade: $("su-grade").value, note: $("su-note").value.trim(), permission: !!session && $("su-permission").checked,
+        _honey: $("su-hp").value
       };
       save(entry).then(function (saved) {
         if (saved === "closed") return "closed";

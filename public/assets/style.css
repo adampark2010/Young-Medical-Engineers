@@ -848,6 +848,11 @@ form{ display:grid; gap:1.25rem; }
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%231B365D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>");
   background-repeat:no-repeat; background-position:right .9rem center;
 }
+/* a required acknowledgement: the box sits beside its label, with a note underneath */
+.field--check{ grid-template-columns:auto minmax(0,1fr); align-items:start; gap:.35rem .7rem; }
+.field.field--check input{ width:1.2rem; height:1.2rem; min-height:0; margin:.15rem 0 0; padding:0; border:0; accent-color:var(--primary); cursor:pointer; }
+.field--check label{ font-weight:500; line-height:1.45; cursor:pointer; }
+.field--check .form-note{ grid-column:2; }
 .form-actions{ display:flex; flex-wrap:wrap; align-items:center; gap:1rem; }
 .form-note{ font-size:.9rem; color:var(--muted); }
 .form-err{
