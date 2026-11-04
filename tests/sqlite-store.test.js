@@ -49,6 +49,19 @@ test('local SQLite store: add, list, keep past ones out of the public list, remo
     assert.match(list[0].created_at, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/);
     assert.equal(await store.removeSignups([one.id, two.id, randomUUID()]), 2);
     assert.deepEqual(await store.signups(), []);
+
+    // form submissions: answers keep their order, a retry is saved once, newest first
+    const ask = { id: randomUUID(), form: 'contact', fields: [['Name', 'Kim'], ['Email', 'k@example.org'], ['Topic', 'A talk'], ['Message', 'Hi']] };
+    const tutor = { id: randomUUID(), form: 'tutoring', fields: [['Student name', 'Ada']] };
+    await store.addFormSubmission(ask);
+    await store.addFormSubmission(ask);
+    await store.addFormSubmission(tutor);
+    const forms = await store.formSubmissions();
+    assert.deepEqual(forms.map(f => f.id), [tutor.id, ask.id]);
+    assert.deepEqual(forms[1].fields, ask.fields);
+    assert.match(forms[1].created_at, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/);
+    assert.equal(await store.removeFormSubmissions([ask.id, tutor.id, randomUUID()]), 2);
+    assert.deepEqual(await store.formSubmissions(), []);
   } finally {
     store.close();
     rmSync(dir, { recursive: true, force: true });

@@ -6,10 +6,12 @@ There is no frontend build step.
 ## Moving to Cloudflare
 
 The site is moving from GitHub Pages to Cloudflare Workers, which also runs the
-`/admin` session manager and saves sign-ups in a Neon database. `worker.js` and
-`wrangler.jsonc` hold the Cloudflare setup. Follow
-[CLOUDFLARE-SETUP.md](CLOUDFLARE-SETUP.md) step by step. GitHub Pages keeps
-serving the site until its last steps, so nothing goes offline in between.
+`/admin` session manager and saves sign-ups and every form (tutoring requests,
+volunteer applications, messages) in a Neon database that only admins can read,
+behind Cloudflare Access. `worker.js` and `wrangler.jsonc` hold the Cloudflare
+setup. Follow [CLOUDFLARE-SETUP.md](CLOUDFLARE-SETUP.md) step by step. GitHub
+Pages keeps serving the site until its last steps, so nothing goes offline in
+between, and the forms keep emailing in full there.
 
 ## Publish on GitHub Pages (until the move)
 

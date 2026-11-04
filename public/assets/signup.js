@@ -1,9 +1,10 @@
 /* Young Medical Engineers: the sign-up pages.
    signup.html?session=<id> shows one session and a short form; signup.html?notify is the
    "tell me when new sessions open" list. A sign-up is saved for the admins (/api/signups, seen
-   on /admin) and emailed to the YME inbox through FormSubmit; either one reaching the team is
-   enough. Then the visitor moves on to signed-up.html, which offers Add to Calendar and a link
-   to share. Needs assets/sessions.js (window.YMESessions). */
+   on /admin, with only a short notice emailed) or, without the database, emailed in full to the YME
+   inbox through FormSubmit; either one reaching the team is enough. Then the visitor moves on to
+   signed-up.html, which offers Add to Calendar and a link to share. Needs assets/sessions.js
+   (window.YMESessions). */
 (function () {
   "use strict";
 
@@ -86,16 +87,21 @@
         return r.json().then(function (d) { return d && d.closed ? "closed" : false; }, function () { return false; });
       }).catch(function () { return false; });
     }
-    /* emailed to the YME inbox, like the other forms on the site */
-    function email(entry) {
+    /* emailed to the YME inbox, like the other forms on the site. Once it is saved for the admins
+       (saved is true) the email is only a notice, so the details stay on /admin. */
+    function email(entry, saved) {
       if (entry._honey) return Promise.resolve(true);
-      var data = {
+      var data = saved === true ? {
+        Notice: "A new " + (session ? "session sign-up" : "Get Notified sign-up") + " is waiting on the admin page.",
+        Open: location.origin + "/admin#signups",
+        _subject: "YME website: " + (session ? "Session sign-up" : "Tell me when new sessions open")
+      } : {
         Name: entry.name, Email: entry.email, Grade: entry.grade || "Not given", Note: entry.note || "None",
         Session: session ? session.title + " (" + S.when(session) + ")" : "Tell me when new sessions open",
         _subject: "YME website: " + (session ? "Session sign-up" : "Tell me when new sessions open"),
         _template: "table", _replyto: entry.email
       };
-      if (session) data.Permission = entry.permission ? "Yes: 18 or older, or a parent or guardian has given permission" : "No";
+      if (session && saved !== true) data.Permission = entry.permission ? "Yes: 18 or older, or a parent or guardian has given permission" : "No";
       return fetch("https://formsubmit.co/ajax/" + INBOX, {
         method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(data)
       }).then(function (r) { return r.ok; }).catch(function () { return false; });
@@ -139,7 +145,7 @@
       };
       save(entry).then(function (saved) {
         if (saved === "closed") return "closed";
-        return email(entry).then(function (sent) { return saved || sent; });
+        return email(entry, saved).then(function (sent) { return saved || sent; });
       }).then(function (outcome) {
         if (outcome === true) {
           remember({ name: entry.name.split(/\s+/)[0].slice(0, 40), session: session });

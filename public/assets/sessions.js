@@ -145,11 +145,15 @@
      Resolves to { sessions, ok }; ok is false only when neither source could be read. */
   function load() {
     if (!window.fetch || location.protocol === "file:") return Promise.resolve({ sessions: [], ok: false });
+    /* a slow source gives up after 8 seconds, so the other one still shows */
     var get = function (url) {
-      return fetch(url, { headers: { Accept: "application/json" }, cache: "no-store" })
+      var stop = window.AbortController ? new AbortController() : null;
+      var timer = stop && setTimeout(function () { stop.abort(); }, 8000);
+      return fetch(url, { headers: { Accept: "application/json" }, cache: "no-store", signal: stop ? stop.signal : undefined })
         .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
         .then(function (data) { return (data && data.sessions) || []; })
-        .catch(function () { return null; });
+        .catch(function () { return null; })
+        .then(function (list) { clearTimeout(timer); return list; });
     };
     return Promise.all([get("api/sessions"), get("sessions.json")]).then(function (sources) {
       var byId = {}, all = [];

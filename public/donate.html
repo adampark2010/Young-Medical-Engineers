@@ -177,7 +177,24 @@
     });
   }
 
-  /* -- forms: deliver via FormSubmit, report status inline ------------ */
+  /* -- forms: saved for the admins, or emailed; status shown inline ----- */
+  /* Where the site runs with its database (Cloudflare), a form is saved there, only the admins can
+     read it on /admin, and the email through FormSubmit is just a short notice. Without a database
+     (GitHub Pages, or before one is connected) the whole form is emailed, as before. */
+  function post(url, body) {
+    return fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify(body)
+    }).then(function (r) { return r.ok; }, function () { return false; });
+  }
+  function newId() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    var b = crypto.getRandomValues(new Uint8Array(16));
+    b[6] = (b[6] & 15) | 64; b[8] = (b[8] & 63) | 128;
+    var h = Array.prototype.map.call(b, function (x) { return (x + 256).toString(16).slice(1); }).join("");
+    return h.slice(0, 8) + "-" + h.slice(8, 12) + "-" + h.slice(12, 16) + "-" + h.slice(16, 20) + "-" + h.slice(20);
+  }
   document.querySelectorAll("form.js-form").forEach(function (f) {
     var btn = f.querySelector('button[type="submit"]');
     var err = f.querySelector(".form-err");
@@ -193,17 +210,19 @@
       if (btn) { btn.setAttribute("aria-busy", "true"); btn.textContent = "Sending…"; }
       if (err) err.classList.remove("show");
 
-      var data = {};
-      new FormData(f).forEach(function (v, k) { data[k] = v; });
-      data._subject = "YME website: " + (f.dataset.subject || "form submission");
-      data._template = "table";
+      var fields = {};
+      new FormData(f).forEach(function (v, k) { fields[k] = v; });
+      var kind = f.dataset.subject || "Form submission";
+      f.dataset.sid = f.dataset.sid || newId(); /* the same id on a retry, so it is saved once */
 
-      fetch("https://formsubmit.co/ajax/youngmedicalengineers@gmail.com", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Accept": "application/json" },
-        body: JSON.stringify(data)
-      }).then(function (r) {
-        if (!r.ok) throw new Error("send failed");
+      var saved = f.dataset.form ? post("api/forms", { id: f.dataset.sid, form: f.dataset.form, fields: fields }) : Promise.resolve(false);
+      saved.then(function (ok) {
+        var mail = ok
+          ? { _subject: "YME website: " + kind, Notice: "A new " + kind.toLowerCase() + " is waiting on the admin page.", Open: location.origin + "/admin" }
+          : Object.assign({ _subject: "YME website: " + kind, _template: "table" }, fields);
+        return post("https://formsubmit.co/ajax/youngmedicalengineers@gmail.com", mail).then(function (sent) { return ok || sent; });
+      }).then(function (delivered) {
+        if (!delivered) throw new Error("send failed");
         var wrap = f.closest(".form-card") || f.parentElement;
         wrap.classList.add("sent");
         var done = wrap.querySelector(".form-done");

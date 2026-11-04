@@ -70,11 +70,11 @@
 
       <p><strong>What we do not collect.</strong> We do not use analytics, advertising or tracking cookies, and this site sets no cookies at all. After you sign up for a session, your first name and the session are kept in your browser&rsquo;s session storage so the confirmation page can greet you; they stay on your device and are cleared when you close the tab.</p>
 
-      <p><strong>What every website receives.</strong> Like any website, our host (currently GitHub Pages) receives basic technical information when your browser loads a page, such as your IP address and browser type, and may keep it briefly in server logs for security. That is covered by GitHub&rsquo;s own privacy statement. We do not use those logs to identify anyone.</p>
+      <p><strong>What every website receives.</strong> Like any website, our web host (currently GitHub Pages; Cloudflare once we move there) receives basic technical information when your browser loads a page, such as your IP address and browser type, and may keep it briefly in server logs for security. That is covered by the host&rsquo;s own privacy statement. We do not use those logs to identify anyone.</p>
 
       <p><strong>Content from other sites.</strong> A few pictures on our Articles page load directly from the news sources they belong to, such as the National Institutes of Health, the University of Southern California and Caltech, so those sites receive the same basic technical information when your browser loads them. Links to Instagram, PayPal and news stories take you to other sites with their own privacy policies.</p>
 
-      <p><strong>How it reaches us.</strong> Form submissions are delivered to our email through a third-party service, FormSubmit, which passes the contents on and is subject to its own privacy terms. When our session manager is running, session sign-ups are also saved in a private database that only board members can open. Either way, the information is seen only by the board members who arrange tutoring, volunteers and events.</p>
+      <p><strong>How it reaches us.</strong> When our website runs with its database, form submissions and session sign-ups are saved in a private database that only board members can read, after signing in to our admin page; our email then gets only a short notice, with no personal details, through a third-party service, FormSubmit. If the database is not available, the form is emailed to us in full through FormSubmit instead, which passes the contents on and is subject to its own privacy terms. Either way, the information is seen only by the board members who arrange tutoring, volunteers and events.</p>
 
       <p><strong>What we use it for.</strong> Matching a student with a tutor, following up on a volunteer application, scheduling a talk or demonstration, replying to messages, sending the details of a session you signed up for, and, if you asked, telling you when new sessions open. That is all. We do not sell, rent or share personal information with anyone else, and we do not send marketing.</p>
 
@@ -82,7 +82,7 @@
 
       <p><strong>Keeping, correcting and deleting it.</strong> We keep requests and sign-ups only while they are useful for running the program and answering you. Email <a href="mailto:youngmedicalengineers@gmail.com">youngmedicalengineers@gmail.com</a> to see what we hold about you, to correct it, or to have it deleted, and we will do it and confirm when it is done.</p>
 
-      <p><strong>Keeping it safe.</strong> Only board members can open the email account and database that hold your information, and we do not copy it anywhere else. No system is perfectly secure, so we collect as little as we can.</p>
+      <p><strong>Keeping it safe.</strong> Only board members can open the email account and database that hold your information, the admin page has its own sign-in, every page is sent over an encrypted (HTTPS) connection, and we do not copy your information anywhere else. No system is perfectly secure, so we collect as little as we can.</p>
 
       <p><strong>Donations.</strong> Donations are handled by PayPal on PayPal&rsquo;s own site. We never see or store card or bank details. Our <a href="donation-policy.html">Donation Policy</a> explains what PayPal shares with us.</p>
 
@@ -202,7 +202,24 @@
     });
   }
 
-  /* -- forms: deliver via FormSubmit, report status inline ------------ */
+  /* -- forms: saved for the admins, or emailed; status shown inline ----- */
+  /* Where the site runs with its database (Cloudflare), a form is saved there, only the admins can
+     read it on /admin, and the email through FormSubmit is just a short notice. Without a database
+     (GitHub Pages, or before one is connected) the whole form is emailed, as before. */
+  function post(url, body) {
+    return fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify(body)
+    }).then(function (r) { return r.ok; }, function () { return false; });
+  }
+  function newId() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    var b = crypto.getRandomValues(new Uint8Array(16));
+    b[6] = (b[6] & 15) | 64; b[8] = (b[8] & 63) | 128;
+    var h = Array.prototype.map.call(b, function (x) { return (x + 256).toString(16).slice(1); }).join("");
+    return h.slice(0, 8) + "-" + h.slice(8, 12) + "-" + h.slice(12, 16) + "-" + h.slice(16, 20) + "-" + h.slice(20);
+  }
   document.querySelectorAll("form.js-form").forEach(function (f) {
     var btn = f.querySelector('button[type="submit"]');
     var err = f.querySelector(".form-err");
@@ -218,17 +235,19 @@
       if (btn) { btn.setAttribute("aria-busy", "true"); btn.textContent = "Sending…"; }
       if (err) err.classList.remove("show");
 
-      var data = {};
-      new FormData(f).forEach(function (v, k) { data[k] = v; });
-      data._subject = "YME website: " + (f.dataset.subject || "form submission");
-      data._template = "table";
+      var fields = {};
+      new FormData(f).forEach(function (v, k) { fields[k] = v; });
+      var kind = f.dataset.subject || "Form submission";
+      f.dataset.sid = f.dataset.sid || newId(); /* the same id on a retry, so it is saved once */
 
-      fetch("https://formsubmit.co/ajax/youngmedicalengineers@gmail.com", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Accept": "application/json" },
-        body: JSON.stringify(data)
-      }).then(function (r) {
-        if (!r.ok) throw new Error("send failed");
+      var saved = f.dataset.form ? post("api/forms", { id: f.dataset.sid, form: f.dataset.form, fields: fields }) : Promise.resolve(false);
+      saved.then(function (ok) {
+        var mail = ok
+          ? { _subject: "YME website: " + kind, Notice: "A new " + kind.toLowerCase() + " is waiting on the admin page.", Open: location.origin + "/admin" }
+          : Object.assign({ _subject: "YME website: " + kind, _template: "table" }, fields);
+        return post("https://formsubmit.co/ajax/youngmedicalengineers@gmail.com", mail).then(function (sent) { return ok || sent; });
+      }).then(function (delivered) {
+        if (!delivered) throw new Error("send failed");
         var wrap = f.closest(".form-card") || f.parentElement;
         wrap.classList.add("sent");
         var done = wrap.querySelector(".form-done");

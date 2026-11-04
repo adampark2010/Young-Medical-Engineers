@@ -1,4 +1,4 @@
--- Upcoming Sessions and their sign-ups. Run in the Neon SQL editor; safe to run again,
+-- Upcoming Sessions, their sign-ups, and the website's form submissions. Run in the Neon SQL editor; safe to run again,
 -- and run it again after an update adds a table (it never erases anything).
 CREATE TABLE IF NOT EXISTS sessions (
   id UUID PRIMARY KEY,
@@ -34,3 +34,22 @@ CREATE TABLE IF NOT EXISTS signups (
 );
 -- one sign-up per email for each session (and one for the "tell me" list)
 CREATE UNIQUE INDEX IF NOT EXISTS signups_once ON signups (COALESCE(session_id::text, 'notify'), lower(email));
+
+-- Tutoring requests, volunteer applications and messages from the website's forms (lib/forms.js).
+-- fields keeps each answer with its question, in the form's order: [["Email", "..."], ...].
+CREATE TABLE IF NOT EXISTS form_submissions (
+  id UUID PRIMARY KEY,
+  form TEXT NOT NULL CHECK (form IN ('tutoring', 'volunteer', 'contact')),
+  fields JSONB NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS form_submissions_created ON form_submissions (created_at DESC);
+
+-- When the website has its own login (db/site-role.sql), let it read, add and delete rows in every
+-- table above, including any a later update adds. Does nothing until that login exists.
+DO $$ BEGIN
+  IF EXISTS (SELECT FROM pg_roles WHERE rolname = 'yme_site') THEN
+    GRANT USAGE ON SCHEMA public TO yme_site;
+    GRANT SELECT, INSERT, DELETE ON sessions, signups, form_submissions TO yme_site;
+  END IF;
+END $$;

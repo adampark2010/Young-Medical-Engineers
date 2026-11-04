@@ -41,7 +41,7 @@ assets/style.css  All colours, type and layout. Design tokens are at the top (:r
 assets/sessions.js  Session data and the ticket card for every page (YMESessions): loads
                   /api/sessions and sessions.json, and draws the list on sessions.html
 assets/signup.js  The sign-up form and the confirmation page
-assets/admin.js   /admin: the Sessions and Sign-Ups tabs
+assets/admin.js   /admin: the Sessions, Sign-Ups and Forms tabs
 assets/builder.js The Session Builder
 assets/readme.md  Where photos and board headshots live and how to replace them
 assets/board/     Headshots, one per member, named first-last.jpg
@@ -54,26 +54,38 @@ CNAME             Custom domain for GitHub Pages (www.medengineers.org). Cloudfl
 robots.txt, sitemap.xml   Search-engine files; update sitemap.xml if pages are added
 
 Server (top level, next to public/):
-worker.js         The Cloudflare Worker. It answers three addresses and leaves every
+worker.js         The Cloudflare Worker. It answers these addresses and leaves every
                   other one to the files in public/:
                   /api/sessions: anyone can read upcoming sessions; signed-in admins
                   add (POST) them, and delete (DELETE) several at once with the
                   separate delete password
                   /api/signups: anyone signs up from the website (POST); signed-in
                   admins list sign-ups (GET) and delete them with the delete password
-                  /admin: asks for an admin sign-in, then shows the session manager
+                  /api/forms: the tutoring, volunteer and contact forms (POST);
+                  signed-in admins list (GET) and delete them the same way
+                  /admin: checks the admin sign-in, then shows the session manager
+                  /admin/api/...: the same three, for the admin page. Admin requests
+                  go here so Cloudflare Access can guard all of /admin while visitors'
+                  forms on /api/... stay open.
                   It also serves index.html at /, because pages keep their .html
                   addresses (html_handling "none" in wrangler.jsonc).
 lib/              The code behind it: sign-in and the delete password (auth.js),
-                  request helpers (http.js), sessions (sessions.js), sign-ups
-                  (signups.js), the /admin page (admin.js, admin-page.js), the Neon
-                  database (database.js) and the local SQLite one (sqlite-store.js)
-db/schema.sql     Creates the sessions and signups tables; run it in Neon (again after
-                  any update that adds a table; it never erases anything)
+                  Cloudflare Access tokens (access.js), request helpers (http.js),
+                  sessions (sessions.js), sign-ups (signups.js), form submissions
+                  (forms.js, which also lists each form's fields), the /admin page
+                  (admin.js, admin-page.js), the Neon database (database.js) and the
+                  local SQLite one (sqlite-store.js)
+db/schema.sql     Creates the sessions, signups and form_submissions tables; run it in
+                  Neon (again after any update that adds a table; it never erases
+                  anything)
+db/site-role.sql  Creates the website's own database login (yme_site), which can read,
+                  add and delete rows but not change or drop tables
 tests/            npm test (uses a simulated database, never Neon)
 server.mjs        Local server for npm start (SQLite in data/, not Neon)
 wrangler.jsonc    Cloudflare's settings: publish public/, run worker.js for /, /api/*
-                  and /admin, and turn on Node compatibility (node:crypto, Buffer)
+                  and /admin/*, and turn on Node compatibility (node:crypto, Buffer)
+public/_headers   Security headers Cloudflare adds to every page (HTTPS only, no
+                  framing, a Content-Security-Policy); GitHub Pages ignores it
 package.json, package-lock.json   Node 24, the Neon driver, and wrangler (Cloudflare's
                   tool, for npm run preview and deploying)
 CLOUDFLARE-SETUP.md   Step-by-step setup on Cloudflare and Neon, and moving
@@ -102,9 +114,15 @@ HOW THINGS WORK
   eleven content pages, so change every copy together. Content already on screen when
   a page opens does not fade. Without JavaScript, or with reduced motion, nothing
   fades. Sessions and sign-ups have their own files (assets/sessions.js, signup.js).
-- Forms post to FormSubmit (https://formsubmit.co) and arrive at
-  youngmedicalengineers@gmail.com. The first submission from the live domain triggers
-  a one-time activation email to that inbox; click the link in it once.
+- Forms: the small script in each page first saves the form to the database
+  (/api/forms). If that works, only a short notice with no personal details goes to
+  youngmedicalengineers@gmail.com through FormSubmit (https://formsubmit.co), and the
+  form itself is read on /admin (Forms tab). If there is no database (GitHub Pages, or
+  before DATABASE_URL is set), the whole form is emailed through FormSubmit instead.
+  Session sign-ups (assets/signup.js) work the same way. A form's fields are listed in
+  lib/forms.js; a new or renamed field must be added there too, or it is left out.
+  The first email from a new domain triggers a one-time FormSubmit activation email
+  to that inbox; click the link in it once.
 - Fonts are self-hosted in assets/fonts (no serif typeface anywhere):
   Archivo (regular width) for headlines, the red labels, footer titles,
   numbers and the Free. Always. band; Inter for body text, nav, buttons and

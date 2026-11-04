@@ -1,0 +1,13 @@
+# Security headers for every file Cloudflare serves from public/ (GitHub Pages ignores this file).
+# The admin page and the /api/... answers set their own, stricter headers in lib/.
+# Content-Security-Policy: scripts, styles and fonts only from this site (the pages' own inline
+# scripts included); pictures from any https address, for the Articles page; forms post only here
+# and to FormSubmit; nothing may put the site in a frame.
+/*
+  Strict-Transport-Security: max-age=31536000
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Cross-Origin-Opener-Policy: same-origin
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://formsubmit.co; frame-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests

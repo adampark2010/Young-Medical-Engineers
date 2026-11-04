@@ -1,7 +1,8 @@
 /* Young Medical Engineers: session manager (/admin).
-   Sessions tab: adds sessions through /api/sessions (they go live at once), lists them, and
-   deletes the ticked ones. Sign-Ups tab: everyone who signed up on the website (/api/signups),
-   grouped by session, with copy emails, a CSV download, and delete. Deleting always asks for the
+   Sessions tab: adds sessions through /admin/api/sessions (they go live at once), lists them, and
+   deletes the ticked ones. Sign-Ups tab: everyone who signed up on the website (/admin/api/signups),
+   grouped by session, with copy emails, a CSV download, and delete. Forms tab: tutoring requests,
+   volunteer applications and messages (/admin/api/forms), with delete. Deleting always asks for the
    separate delete password, which is never stored. The browser sends the admin sign-in with each
    request. */
 (function () {
@@ -96,7 +97,7 @@
     status.textContent = "Saving…";
     pendingId = pendingId || uuid();
     d.id = pendingId;
-    send("/api/sessions", "POST", d).then(function () {
+    send("/admin/api/sessions", "POST", d).then(function () {
       pendingId = null;
       form.reset();
       justSaved = true;
@@ -210,13 +211,13 @@
   var sessionPicker = picker({
     ids: { list: "a-list", tools: "a-tools", all: "a-all", del: "a-delete", form: "a-del-form", text: "a-del-text", pass: "a-del-pass",
       go: "a-del-go", cancel: "a-del-cancel", msg: "a-list-msg", status: "a-list-status", off: "a-del-off" },
-    noun: ["session", "sessions"], endpoint: "/api/sessions",
+    noun: ["session", "sessions"], endpoint: "/admin/api/sessions",
     warning: "They disappear from the website straight away and can't be brought back.",
     gone: function (n) { return n === 1 ? "It's off the website now." : "They're off the website now."; }, reload: loadSessions
   });
   function loadSessions() {
     $("a-list-msg").textContent = "";
-    get("/api/sessions?scope=admin", "Could not load sessions.").then(function (data) {
+    get("/admin/api/sessions?scope=admin", "Could not load sessions.").then(function (data) {
       sessionList.textContent = "";
       if (!data.sessions.length) sessionList.appendChild(el("li", "builder__empty", "No sessions yet. Add one with the form."));
       data.sessions.forEach(function (s) {
@@ -234,7 +235,7 @@
   var signupPicker = picker({
     ids: { list: "g-list", tools: "g-tools", all: "g-all", del: "g-delete", form: "g-del-form", text: "g-del-text", pass: "g-del-pass",
       go: "g-del-go", cancel: "g-del-cancel", msg: "g-msg", status: "g-status", off: "g-del-off" },
-    noun: ["sign-up", "sign-ups"], endpoint: "/api/signups",
+    noun: ["sign-up", "sign-ups"], endpoint: "/admin/api/signups",
     warning: "This can't be undone.", reload: loadSignups
   });
   function signedUpAt(iso) {
@@ -307,7 +308,7 @@
   }
   function loadSignups() {
     $("g-msg").textContent = "";
-    return get("/api/signups", "Could not load sign-ups.").then(function (data) {
+    return get("/admin/api/signups", "Could not load sign-ups.").then(function (data) {
       signups = data.signups || [];
       drawSignups(Boolean(data.canDelete));
     }).catch(function (err) { signupPicker.error(err.message); });
@@ -315,6 +316,58 @@
   $("g-refresh").addEventListener("click", function () {
     $("g-status").textContent = "";
     loadSignups().then(function () { if (!$("g-msg").textContent) $("g-status").textContent = "Up to date."; });
+  });
+
+  /* -- Forms tab: tutoring requests, volunteer applications and messages ---- */
+  var FORM_GROUPS = [["tutoring", "Tutoring Requests"], ["volunteer", "Volunteer Applications"], ["contact", "Messages"]];
+  var formList = $("f-list"), submissions = [];
+  var formPicker = picker({
+    ids: { list: "f-list", tools: "f-tools", all: "f-all", del: "f-delete", form: "f-del-form", text: "f-del-text", pass: "f-del-pass",
+      go: "f-del-go", cancel: "f-del-cancel", msg: "f-msg", status: "f-status", off: "f-del-off" },
+    noun: ["submission", "submissions"], endpoint: "/admin/api/forms",
+    warning: "This can't be undone.", reload: loadForms
+  });
+  function drawForms(canDelete) {
+    formList.textContent = "";
+    $("t-forms-count").textContent = submissions.length ? String(submissions.length) : "";
+    $("f-summary").textContent = !submissions.length ? "Nothing yet. Tutoring requests, volunteer applications and messages appear here as soon as someone sends one."
+      : FORM_GROUPS.map(function (g) {
+        var n = submissions.filter(function (s) { return s.form === g[0]; }).length;
+        return n ? n + " " + (n === 1 ? g[1].replace(/s$/, "") : g[1]).toLowerCase() : "";
+      }).filter(Boolean).join(", ") + ".";
+    FORM_GROUPS.forEach(function (g) {
+      var items = submissions.filter(function (s) { return s.form === g[0]; });
+      if (!items.length) return;
+      var section = el("section", "signup-group");
+      var head = el("div", "signup-group__head");
+      var label = el("div");
+      label.appendChild(el("h3", null, g[1]));
+      label.appendChild(el("p", null, items.length + " · newest first"));
+      head.appendChild(label);
+      section.appendChild(head);
+      var ul = el("ul", "admin-list");
+      items.forEach(function (s) {
+        var fields = Array.isArray(s.fields) ? s.fields : [];
+        /* the first answer is the person's name; the rest are listed with their questions */
+        var lines = fields.slice(1).map(function (f) { return { text: f[0] + ": " + f[1], cls: "admin-item__note" }; });
+        lines.push({ text: signedUpAt(s.created_at).replace("Signed up", "Sent"), cls: "admin-item__who" });
+        ul.appendChild(formPicker.row(s.id, fields[0] ? fields[0][1] : "Someone", lines, canDelete));
+      });
+      section.appendChild(ul);
+      formList.appendChild(section);
+    });
+    formPicker.ready(canDelete, submissions.length);
+  }
+  function loadForms() {
+    $("f-msg").textContent = "";
+    return get("/admin/api/forms", "Could not load form submissions.").then(function (data) {
+      submissions = data.submissions || [];
+      drawForms(Boolean(data.canDelete));
+    }).catch(function (err) { formPicker.error(err.message); });
+  }
+  $("f-refresh").addEventListener("click", function () {
+    $("f-status").textContent = "";
+    loadForms().then(function () { if (!$("f-msg").textContent) $("f-status").textContent = "Up to date."; });
   });
 
   /* CSV for a spreadsheet. Cells that start like a formula are prefixed, so a spreadsheet shows them as text. */
@@ -367,8 +420,9 @@
       $(t.getAttribute("aria-controls")).hidden = !on;
     });
     if (focus) tab.focus();
-    history.replaceState(null, "", location.pathname + location.search + (tab.id === "t-signups" ? "#signups" : ""));
+    history.replaceState(null, "", location.pathname + location.search + (tab.id === "t-signups" ? "#signups" : tab.id === "t-forms" ? "#forms" : ""));
     if (tab.id === "t-signups") loadSignups();
+    if (tab.id === "t-forms") loadForms();
   }
   tabs.forEach(function (t, i) {
     t.addEventListener("click", function () { openTab(t); });
@@ -382,6 +436,8 @@
 
   update();
   loadSessions();
-  if (location.hash === "#signups") openTab($("t-signups"));
-  else loadSignups(); /* for the count on the tab */
+  var start = { "#signups": "t-signups", "#forms": "t-forms" }[location.hash];
+  if (start) openTab($(start));
+  if (start !== "t-signups") loadSignups(); /* for the counts on the tabs */
+  if (start !== "t-forms") loadForms();
 })();
