@@ -952,6 +952,8 @@ body > .site-footer{ flex-shrink:0; }
 /* ---- scroll reveal (class added by the inline script) --------------------------- */
 .reveal{ opacity:0; transform:translateY(12px); transition:opacity 600ms var(--ease), transform 600ms var(--ease); }
 .reveal.is-visible{ opacity:1; transform:none; }
+/* pages marked <body class="still"> (About: Who We Are) scroll like a still image, with no fade-ins */
+.still .reveal{ opacity:1; transform:none; transition:none; }
 @media print{ .reveal{ opacity:1; transform:none; } }
 
 /* ---- page transitions (cross-document view transitions; browsers without support navigate normally) ---- */
