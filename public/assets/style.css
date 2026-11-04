@@ -357,6 +357,7 @@ main > .section--tint:last-child{ border-bottom:0; }
 .section__head h1{ font-size:clamp(2.4rem, 4.6vw, 3.75rem); }
 .section__head .prose .lede{ color:var(--muted); }
 .note{ font-size:.95rem; color:var(--muted); max-width:62ch; }
+.prose--wide{ max-width:78ch; margin-inline:auto; }
 .prose--wide p{ max-width:78ch; font-size:1.05rem; line-height:1.62; }
 .prose--center{ text-align:center; }
 .heading--center{ text-align:center; }
@@ -528,18 +529,17 @@ main > .section--tint:last-child{ border-bottom:0; }
 .page-hero__inner--center .note{ max-width:60ch; margin-inline:auto; }
 .page-hero .page-hero__inner--center{ max-width:none; }
 .page-hero .page-hero__inner--center h1{ max-width:none; margin-inline:auto; }
-.page-hero .page-hero__inner--center .lede{ max-width:none; }
+/* every page's description: centred, in a reading-width column */
+.page-hero .page-hero__inner--center .lede{ max-width:44rem; }
 .page-hero__inner--center .lede{ margin-inline:auto; }
 .page-hero__inner--center .lede + .lede{ margin-top:1rem; }
 
-/* Times New Roman for the longer passages of prose. It is a system font,
-   so nothing is downloaded for it. */
+/* no serif anywhere: these older classes now use the site's own font */
 .prose--serif p,
-.lede--serif{ font-family:"Times New Roman", Times, serif; }
+.lede--serif{ font-family:var(--font-body); }
 
 /* The founding narrative also runs the full width of the page. */
 .prose--center.prose--mission.prose--narrative p{
-  font-family:"Times New Roman", Times, serif;
   max-width:none; margin-inline:0;
   font-size:clamp(1.1rem, 1.5vw, 1.35rem); line-height:1.6;
 }
