@@ -3,7 +3,8 @@
    Warm, people-first nonprofit design. Brand hues were
    sharpened in September 2026 and the logo files recolored to
    match: ink navy, true red, cool steel, charcoal.
-   Company colours: navy #1B365D, red #C8102E, white #FFFFFF, blue-gray #EAF0F7.
+   Company colours: navy #1B365D, white #FFFFFF, blue-gray #EAF0F7; navy is the accent.
+   Red #C8102E is kept only for the article pages (In the News, Our Updates) and form errors.
    Pages are white, with blue-gray sections; navy and red carry the brand.
    Type: self-hosted in assets/fonts (SIL OFL). IBM Plex Sans
    throughout, one variable file covering 400-700. The site
@@ -33,18 +34,22 @@
   --ink:           #141A26;
   --ink-panel:     #10151F; /* solid block behind hero text, over photography */
   --black:         #1D1D22; /* full-width dark break, as on the YCS reference */
-  --accent-light:  #F2707A; /* brand red lifted for dark backgrounds; #C8102E reads 2.85:1 there */
+  --accent-light:  #9DBCE8; /* light blue for small text on dark backgrounds */
+  --red:           var(--brand-red); /* red is kept only for the article pages and for form errors */
+  --red-light:     #F2707A; /* brand red lifted for dark backgrounds */
+  --red-hover:     #A30D25;
+  --blue:          #2F5C9E; /* a brighter blue for fills on dark backgrounds (Donate, session dates) */
   --muted:         #4F5B6B;
   --primary:       var(--brand-navy);
   --primary-deep:  #16213A;
-  --accent:        var(--brand-red);
-  --accent-hover:  #A30D25;
+  --accent:        var(--brand-navy); /* the site's accent is navy, not red */
+  --accent-hover:  #132845;
   --border:        #D8E1EC;
   --border-strong: #7C8AA0;
   --on-dark:       #FFFFFF;
   --on-dark-muted: #B9C2D3;
   --focus:         var(--brand-navy);
-  --accent-on-dark: #FF7A88;
+  --accent-on-dark: #9DBCE8;
 
   /* type: IBM Plex Sans throughout (variable, 400-700) */
   --font-display: "IBM Plex Sans", Arial, Helvetica, sans-serif;
@@ -108,7 +113,7 @@ a:hover{ color:var(--accent); }
 ul,ol{ margin:0; padding:0; }
 p{ margin:0; }
 strong{ font-weight:700; }
-::selection{ background:rgba(200,16,46,.16); }
+::selection{ background:rgba(27,54,93,.16); }
 h1,h2,h3,h4{ margin:0; color:var(--primary-deep); }
 h1,h2{
   font-family:var(--font-display);
@@ -180,8 +185,11 @@ main:focus{ outline:none; }
 .btn--secondary{ background:transparent; color:var(--brand-navy); border-color:var(--brand-navy); }
 .btn--secondary:hover{ background:var(--brand-navy); color:#fff; }
 /* on the dark header, bands and session cards navy would disappear, so the main button is white there */
-.site-header .btn--primary,.session .btn--primary,.cta-band .btn--primary,.section--black .btn--primary,.hero .btn--primary{ background:#fff; border-color:#fff; color:var(--brand-navy); }
-.site-header .btn--primary:hover,.session .btn--primary:hover,.cta-band .btn--primary:hover,.section--black .btn--primary:hover,.hero .btn--primary:hover{ background:#E6ECF4; border-color:#E6ECF4; color:var(--brand-navy); }
+.session .btn--primary,.cta-band .btn--primary,.section--black .btn--primary,.hero .btn--primary{ background:#fff; border-color:#fff; color:var(--brand-navy); }
+.session .btn--primary:hover,.cta-band .btn--primary:hover,.section--black .btn--primary:hover,.hero .btn--primary:hover{ background:#E6ECF4; border-color:#E6ECF4; color:var(--brand-navy); }
+/* Donate in the header and the phone menu: blue with white text */
+.site-header .btn--primary{ background:var(--blue); border-color:var(--blue); color:#fff; }
+.site-header .btn--primary:hover{ background:#3A6BB0; border-color:#3A6BB0; color:#fff; }
 .btn--light{ background:#fff; color:var(--primary-deep); }
 .btn--light:hover{ background:var(--tint); color:var(--primary-deep); }
 .btn--ghost-light{ background:transparent; color:#fff; border-color:rgba(255,255,255,.6); }
@@ -364,10 +372,10 @@ main > .section--tint:last-child{ border-bottom:0; }
 .newsitem__media img{ width:100%; aspect-ratio:3/2; object-fit:cover; display:block; }
 .newsitem__media figcaption{ margin-top:.35rem; font-size:.75rem; color:var(--muted); }
 .newsitem__meta{ display:flex; flex-wrap:wrap; gap:.6rem; margin:0; font-size:.82rem; color:var(--muted); }
-.newsitem__source{ font-weight:600; color:var(--accent); }
+.newsitem__source{ font-weight:600; color:var(--red); }
 .newsitem h3{ font-size:1.12rem; line-height:1.3; }
 .newsitem h3 a{ color:var(--primary-deep); text-decoration:none; }
-.newsitem h3 a:hover{ color:var(--accent); text-decoration:underline; text-underline-offset:3px; }
+.newsitem h3 a:hover{ color:var(--red); text-decoration:underline; text-underline-offset:3px; }
 .newsitem__note{ margin:0; font-size:.95rem; color:var(--muted); max-width:52ch; }
 .heading--center + .board-grid{ margin-top:clamp(1.5rem, 3vw, 2.5rem); }
 .prose--center p{ margin-inline:auto; }
@@ -651,7 +659,7 @@ main > .section--tint:last-child{ border-bottom:0; }
 .session :focus-visible{ outline-color:#fff; }
 .session__date{
   display:grid; justify-items:center; align-content:center; width:4.75rem; aspect-ratio:1 / 1;
-  background:var(--accent); color:#fff; font-family:var(--font-display); line-height:1; text-transform:uppercase;
+  background:var(--blue); color:#fff; font-family:var(--font-display); line-height:1; text-transform:uppercase;
 }
 .session__month,.session__weekday{ font-size:.72rem; font-weight:700; letter-spacing:.12em; }
 .session__day{ margin-block:.25rem; font-size:2rem; font-weight:700; letter-spacing:-.02em; }
@@ -854,8 +862,8 @@ form{ display:grid; gap:1.25rem; }
 .form-note{ font-size:.9rem; color:var(--muted); }
 .form-err{
   display:none; padding:.9rem 1rem; border-radius:var(--radius-sm);
-  background:#fff; border:1px solid var(--accent); border-left-width:4px;
-  color:var(--accent-hover); font-size:.95rem;
+  background:#fff; border:1px solid var(--red); border-left-width:4px;
+  color:var(--red-hover); font-size:.95rem;
 }
 .form-err a{ color:inherit; font-weight:700; }
 .form-err.show{ display:block; }
@@ -997,9 +1005,9 @@ body > .site-footer{ flex-shrink:0; }
 .section--black .prose strong{ color:#fff; }
 .section--black .prose a{ color:#fff; }
 .section--black .newsitem h3 a{ color:#fff; }
-.section--black .newsitem h3 a:hover{ color:var(--accent-light); }
+.section--black .newsitem h3 a:hover{ color:var(--red-light); }
 .section--black .newsitem__meta{ color:rgba(255,255,255,.62); }
-.section--black .newsitem__source{ color:var(--accent-light); }
+.section--black .newsitem__source{ color:var(--red-light); }
 .section--black .newsitem__note{ color:rgba(255,255,255,.78); }
 .section--black .newsitem__media{ background:rgba(255,255,255,.08); }
 .section--black .newsitem__media figcaption{ color:rgba(255,255,255,.55); }
@@ -1051,5 +1059,5 @@ body > .site-footer{ flex-shrink:0; }
 .newsitem__links{ display:flex; flex-wrap:wrap; gap:.4rem 1.25rem; margin-top:.5rem; font-size:.95rem; font-weight:600; }
 .section--black .newsitem h3{ color:#fff; }
 .section--black .newsitem__links a{ color:#fff; text-underline-offset:3px; }
-.section--black .newsitem__links a:hover{ color:var(--accent-light); }
+.section--black .newsitem__links a:hover{ color:var(--red-light); }
 .section--black .agenda__status{ color:rgba(255,255,255,.72); }
