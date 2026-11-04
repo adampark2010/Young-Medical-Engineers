@@ -993,6 +993,8 @@ body > .site-footer{ flex-shrink:0; }
 @media (prefers-reduced-motion: no-preference){
   .hero h1, .hero .lede{ transition:none; }
 }
+/* the home page title on its own, sitting low on the photo */
+@media (min-width: 900px){ .hero--feature{ padding-bottom:clamp(1.75rem, 3vw, 2.5rem); } }
 
 /* ---- dark band ------------------------------------------------------- */
 /* A full-width near-black break, so the page is not white end to end. */
