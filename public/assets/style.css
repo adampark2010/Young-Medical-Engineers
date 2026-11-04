@@ -659,7 +659,7 @@ main > .section--tint:last-child{ border-bottom:0; }
 .session :focus-visible{ outline-color:#fff; }
 .session__date{
   display:grid; justify-items:center; align-content:center; width:4.75rem; aspect-ratio:1 / 1;
-  background:var(--blue); color:#fff; font-family:var(--font-display); line-height:1; text-transform:uppercase;
+  background:var(--blue); color:#fff; border-radius:var(--radius-btn); font-family:var(--font-display); line-height:1; text-transform:uppercase;
 }
 .session__month,.session__weekday{ font-size:.72rem; font-weight:700; letter-spacing:.12em; }
 .session__day{ margin-block:.25rem; font-size:2rem; font-weight:700; letter-spacing:-.02em; }
@@ -994,7 +994,7 @@ body > .site-footer{ flex-shrink:0; }
   .hero h1, .hero .lede{ transition:none; }
 }
 /* the home page title on its own, sitting low on the photo */
-@media (min-width: 900px){ .hero--feature{ padding-bottom:clamp(1.75rem, 3vw, 2.5rem); } }
+@media (min-width: 900px){ .hero--feature{ padding-bottom:clamp(3rem, 5vw, 4.25rem); } }
 
 /* ---- dark band ------------------------------------------------------- */
 /* A full-width near-black break, so the page is not white end to end. */
