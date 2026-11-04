@@ -1,4 +1,4 @@
-/* Our Updates: YME's own news, read from updates.json and shown in full, newest first.
+/* Our Updates: YME's own news, read from updates.json and shown in full as cards, newest first.
    Each update has its own address (updates.html#its-id) for sharing. Everything is written in as
    text, never as HTML, and links may only go to this site or to https addresses. */
 (function () {
@@ -26,20 +26,12 @@
     return /^https:\/\//i.test(href) || /^[a-z0-9][\w\-./#?=&%]*$/i.test(href) ? href : null;
   }
 
+  /* one update as a card, laid out like the In the News cards (news.js) */
   function post(u) {
-    var article = el("article", "post");
-    if (/^[a-z0-9-]+$/.test(u.id || "")) article.id = u.id;
-    var meta = el("p", "post__meta");
-    if (u.kind) meta.appendChild(el("span", "post__kind", u.kind));
-    if (when(u.date)) {
-      var t = el("time", null, when(u.date));
-      t.dateTime = u.date;
-      meta.appendChild(t);
-    }
-    article.appendChild(meta);
-    article.appendChild(el("h2", null, u.title));
+    var li = el("li", "newsitem");
+    if (/^[a-z0-9-]+$/.test(u.id || "")) li.id = u.id;
     if (u.image && safeHref(u.image)) {
-      var fig = el("figure", "post__media");
+      var fig = el("figure", "newsitem__media");
       var img = el("img");
       img.src = u.image;
       img.alt = u.alt || "";
@@ -47,16 +39,23 @@
       img.decoding = "async";
       fig.appendChild(img);
       if (u.credit) fig.appendChild(el("figcaption", null, u.credit));
-      article.appendChild(fig);
+      li.appendChild(fig);
     }
-    var body = el("div", "prose prose--serif post__body");
-    (Array.isArray(u.body) ? u.body : [u.body]).forEach(function (para) { if (para) body.appendChild(el("p", null, para)); });
-    article.appendChild(body);
+    var meta = el("p", "newsitem__meta");
+    if (u.kind) meta.appendChild(el("span", "newsitem__source", u.kind));
+    if (when(u.date)) {
+      var t = el("time", null, when(u.date));
+      t.dateTime = u.date;
+      meta.appendChild(t);
+    }
+    li.appendChild(meta);
+    li.appendChild(el("h3", null, u.title));
+    (Array.isArray(u.body) ? u.body : [u.body]).forEach(function (para) { if (para) li.appendChild(el("p", "newsitem__note", para)); });
     var links = (Array.isArray(u.links) ? u.links : []).filter(function (l) { return l && l.text && safeHref(l.href); });
     if (links.length) {
-      var row = el("p", "post__links");
-      links.forEach(function (l, i) {
-        var a = el("a", "btn " + (i === 0 ? "btn--primary" : "btn--secondary"), l.text);
+      var row = el("p", "newsitem__links");
+      links.forEach(function (l) {
+        var a = el("a", null, l.text);
         a.href = safeHref(l.href);
         if (/^https:/i.test(l.href)) {
           a.target = "_blank";
@@ -65,9 +64,9 @@
         }
         row.appendChild(a);
       });
-      article.appendChild(row);
+      li.appendChild(row);
     }
-    return article;
+    return li;
   }
 
   fetch("updates.json", { headers: { Accept: "application/json" }, cache: "no-cache" })

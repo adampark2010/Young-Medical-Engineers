@@ -39,7 +39,7 @@
         <li class="has-sub">
           <button class="subnav-toggle" type="button" aria-expanded="false" aria-controls="sub-programs">Programs <svg class="icon icon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
           <ul class="subnav" id="sub-programs">
-            <li><a href="programs.html">All Programs</a></li>
+            <li><a href="programs.html">Sessions</a></li>
             <li><a href="curriculum.html">Tutoring Curriculum</a></li>
             <li><a href="tutoring.html">Request a Tutor</a></li>
           </ul>
@@ -65,24 +65,25 @@
 </header>
 
 <main id="main" tabindex="-1">
-<section class="section">
+<section class="page-hero">
   <div class="container">
     <div class="page-hero__inner page-hero__inner--center">
       <h1>Our Updates</h1>
-    </div>
-    <div class="prose prose--wide prose--center prose--serif">
-      <p>What we have been up to: the talks and build events we run, the people we meet on behalf of students, and what is coming up next. For the medical engineering stories we pick out from around the world, see <a href="articles.html">In the News</a>.</p>
+      <p class="lede lede--serif">What we have been up to: the talks and build events we run, the people we meet on behalf of students, and what is coming up next. For the medical engineering stories we pick out from around the world, see <a href="articles.html">In the News</a>.</p>
     </div>
   </div>
 </section>
 
-<section class="section section--tint" aria-label="Updates">
+<section class="section section--black" aria-labelledby="updates-title">
   <div class="container">
+    <div class="section__head section__head--center">
+      <h2 id="updates-title">News From YME</h2>
+    </div>
     <!-- Updates load here by themselves from updates.json, newest first.
          To add one, see ADDING-ARTICLES.md. Nothing to edit here. -->
+    <ul class="newslist" id="updates-list" hidden></ul>
     <p class="agenda__status" id="updates-status" role="status">Loading updates&hellip;</p>
     <noscript><p class="agenda__status">Turn on JavaScript to read our updates.</p></noscript>
-    <div class="posts" id="updates-list" hidden></div>
   </div>
 </section>
 </main>
