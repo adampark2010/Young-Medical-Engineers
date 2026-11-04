@@ -298,12 +298,6 @@ main:focus{ outline:none; }
   }
   .subnav-toggle:hover{ color:var(--primary-deep); }
   .site-nav > ul > li > a,.subnav-toggle{ position:relative; }
-  .site-nav > ul > li > a::after,.subnav-toggle::after{
-    content:""; position:absolute; left:.7rem; right:.7rem; bottom:.45rem; height:2px; background:var(--accent);
-    transform:scaleX(0); transform-origin:left center; transition:transform var(--t-base) var(--ease);
-  }
-  .site-nav > ul > li > a:hover::after,.site-nav > ul > li > a[aria-current="page"]::after,.subnav-toggle:hover::after,
-  .has-sub.is-open > .subnav-toggle::after,.has-sub:has([aria-current="page"]) > .subnav-toggle::after{ transform:scaleX(1); }
   .site-nav .subnav{
     position:absolute; top:calc(100% + .5rem); left:0; z-index:10; display:block; min-width:15rem; padding:.5rem 0;
     background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); box-shadow:var(--shadow-lg);
@@ -314,21 +308,15 @@ main:focus{ outline:none; }
   .has-sub.is-open > .subnav{ opacity:1; visibility:visible; transform:none; transition-delay:0s; }
   .site-nav .subnav li a{
     position:relative; display:flex; min-height:40px; padding:.55rem 1.25rem; color:var(--ink); font-size:.92rem;
-    transition:color var(--t-fast), padding-left var(--t-base) var(--ease);
+    transition:color var(--t-fast), background-color var(--t-fast);
   }
-  .site-nav .subnav li a::before{
-    content:""; position:absolute; left:.75rem; top:50%; width:2px; height:1.1em; background:var(--accent);
-    transform:translateY(-50%) scaleY(0); transition:transform var(--t-base) var(--ease);
-  }
-  .site-nav .subnav li a:hover{ color:var(--primary-deep); padding-left:1.5rem; }
-  .site-nav .subnav li a[aria-current="page"]{ color:var(--accent); padding-left:1.5rem; }
-  .site-nav .subnav li a:hover::before,.site-nav .subnav li a[aria-current="page"]::before{ transform:translateY(-50%) scaleY(1); }
+  /* no accent bars: a dropdown item just gets a light background under the pointer */
+  .site-nav .subnav li a:hover{ color:var(--primary-deep); background:var(--tint); }
   .site-nav .subnav :focus-visible{ outline-color:var(--focus); }
 }
 @media (hover: hover) and (min-width: 1024px){
   .has-sub:hover > .subnav{ opacity:1; visibility:visible; transform:none; transition-delay:0s; }
   .has-sub:hover > .subnav-toggle .icon-chevron{ transform:rotate(180deg); }
-  .has-sub:hover > .subnav-toggle::after{ transform:scaleX(1); }
 }
 
 
