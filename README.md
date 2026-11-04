@@ -16,6 +16,13 @@ Do not select the repository root as a branch publishing source: the homepage
 is `public/index.html`, not `/index.html` in the checkout. The repository is no
 longer an Astro project, so publishing does not run an Astro build or use `dist/`.
 
+If **Source** is left on **Deploy from a branch**, GitHub also publishes the
+repository root on every push (the **pages build and deployment** run), and
+whichever deployment finishes last is the live site. The workflow waits for
+that run and deploys `public/` after it, so the real site still wins, but
+setting **Source** to **GitHub Actions** stops the extra build and saves about a
+minute per deploy.
+
 The existing custom domain is `www.medengineers.org` (`public/CNAME`). If using
 that domain, keep it configured in **Settings → Pages → Custom domain**, with
 the registrar's DNS pointing to this GitHub Pages site. The site also supports

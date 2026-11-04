@@ -9,6 +9,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  actions: read # to see GitHub's own branch build (below)
 
 concurrency:
   group: github-pages
@@ -29,6 +30,23 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: public
+      # While Settings > Pages > Source is "Deploy from a branch", GitHub also publishes the
+      # repository root on every push ("pages build and deployment"), and whichever deployment
+      # finishes last is the live site. The root has no index.html (the site is in public/), so
+      # wait for that build and deploy after it. With Source set to "GitHub Actions" no branch
+      # build starts, and this step ends after a minute.
+      - name: Wait for GitHub's branch build, so this deployment lands last
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for i in $(seq 1 60); do
+            read -r total open < <(gh api "repos/$GITHUB_REPOSITORY/actions/runs?head_sha=$GITHUB_SHA&per_page=50" \
+              --jq '[.workflow_runs[] | select(.name == "pages build and deployment") | .status] | "\(length) \(map(select(. != "completed")) | length)"')
+            if [ "$total" -gt 0 ] && [ "$open" -eq 0 ]; then echo "GitHub's branch build has finished; deploying after it."; exit 0; fi
+            if [ "$total" -eq 0 ] && [ "$i" -ge 6 ]; then echo "No branch build for this commit; deploying."; exit 0; fi
+            sleep 10
+          done
+          echo "Still waiting after 10 minutes; deploying anyway."
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
