@@ -917,7 +917,16 @@ form{ display:grid; gap:1.25rem; }
 .footer__social .icon{ width:28px; height:28px; }
 .footer__social .icon--ig{ stroke:none; }
 .footer__social:hover .icon--ig{ filter:brightness(1.08); }
-@media (min-width: 860px){ .footer__social{ justify-self:end; } }
+/* the right-hand end of the footer: email, then Instagram */
+.footer__reach{ display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:.75rem 1rem; }
+@media (min-width: 860px){ .footer__reach{ justify-self:end; justify-content:flex-end; } }
+.footer__email{
+  display:inline-flex; align-items:center; gap:.55rem; min-height:44px; padding:.55rem 1rem;
+  border:1px solid rgba(255,255,255,.24); color:rgba(255,255,255,.92); font-size:.9rem; text-decoration:none;
+  transition:border-color var(--t-fast), color var(--t-fast);
+}
+.footer__email .icon{ width:18px; height:18px; flex:none; }
+.footer__email:hover{ border-color:#fff; color:#fff; }
 /* the link columns follow the top menu: About, Programs, then Volunteer, Contact and Donate */
 .footer__grid{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:2.5rem 1.5rem; }
 .footer__brand{ grid-column:1 / -1; }
