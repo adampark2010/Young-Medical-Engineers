@@ -20,7 +20,7 @@
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "NGO", "@id": "https://www.medengineers.org/#organization", "name": "Young Medical Engineers", "alternateName": "YME", "url": "https://www.medengineers.org/contact.html", "logo": "https://www.medengineers.org/assets/logo-full.png", "email": "youngmedicalengineers@gmail.com", "foundingDate": "2026", "description": "A nonprofit founded and run by high school students that introduces students to medical engineering through free tutoring, keynote talks, design challenges, and hands-on demonstrations.", "sameAs": ["https://www.instagram.com/ym_engineers"], "founder": [{"@type": "Person", "name": "Adam Park"}, {"@type": "Person", "name": "Sohum Kodilkar"}]}, {"@type": "WebPage", "name": "About · Young Medical Engineers", "description": "Young Medical Engineers is a nonprofit founded in 2026 by students at the Illinois Mathematics and Science Academy. Learn what we stand for, where we work, and how our free programs run.", "url": "https://www.medengineers.org/contact.html", "isPartOf": {"@type": "WebSite", "name": "Young Medical Engineers", "url": "https://www.medengineers.org/contact.html"}, "about": {"@id": "https://www.medengineers.org/#organization"}}]}</script>
 <script>/* page fade for browsers without view transitions (see style.css) */if(!window.CSSViewTransitionRule&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("pt")</script>
-<link rel="stylesheet" href="assets/style.css?v=2026-11-05b">
+<link rel="stylesheet" href="assets/style.css?v=2026-11-05c">
 <script type="speculationrules">{"prefetch":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}]}</script>
 </head>
 <body>
@@ -226,7 +226,7 @@
       if (url.pathname === location.pathname && url.search === location.search) return; /* a link within this page */
       e.preventDefault();
       root.classList.add("pt-leave");
-      setTimeout(function () { location.href = url.href; }, 160);
+      setTimeout(function () { location.href = url.href; }, 80);
     });
     /* coming back with the Back button shows the page again */
     window.addEventListener("pageshow", function (e) { if (e.persisted) root.classList.remove("pt-leave"); });

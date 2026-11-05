@@ -977,16 +977,16 @@ body > .site-footer{ flex-shrink:0; }
 /* ---- page transitions (cross-document view transitions; browsers without support navigate normally) ---- */
 @media (prefers-reduced-motion: no-preference){
   @view-transition{ navigation:auto; }
-  ::view-transition-old(root){ animation:vt-out 200ms cubic-bezier(.2,.7,.2,1) both; }
-  ::view-transition-new(root){ animation:vt-in 320ms cubic-bezier(.2,.7,.2,1) both; }
+  ::view-transition-old(root){ animation:vt-out 90ms cubic-bezier(.2,.7,.2,1) both; }
+  ::view-transition-new(root){ animation:vt-in 160ms cubic-bezier(.2,.7,.2,1) both; }
 }
 .site-header{ view-transition-name:site-header; }
 @keyframes vt-out{ to{ opacity:0; } }
-@keyframes vt-in{ from{ opacity:0; transform:translateY(8px); } }
+@keyframes vt-in{ from{ opacity:0; transform:translateY(4px); } }
 /* the same fade where cross-document view transitions are not supported (Firefox, older Safari):
    the head script adds .pt to <html>, and the shared script adds .pt-leave before following a link */
-.pt body > main{ animation:vt-in 320ms cubic-bezier(.2,.7,.2,1) backwards; }
-.pt.pt-leave body > main{ opacity:0; transition:opacity 160ms ease-out; }
+.pt body > main{ animation:vt-in 160ms cubic-bezier(.2,.7,.2,1) backwards; }
+.pt.pt-leave body > main{ opacity:0; transition:opacity 80ms ease-out; }
 
 /* ---- photo-led hero panel ------------------------------------------- */
 /* The headline sits in a solid block over the photograph rather than
