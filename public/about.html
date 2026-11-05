@@ -19,7 +19,8 @@
 <link rel="canonical" href="https://www.medengineers.org/about.html">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "NGO", "@id": "https://www.medengineers.org/#organization", "name": "Young Medical Engineers", "alternateName": "YME", "url": "https://www.medengineers.org/", "logo": "https://www.medengineers.org/assets/logo-full.png", "email": "youngmedicalengineers@gmail.com", "foundingDate": "2026", "description": "A nonprofit founded and run by high school students that introduces students to medical engineering through free tutoring, keynote talks, design challenges, and hands-on demonstrations.", "sameAs": ["https://www.instagram.com/ym_engineers"], "founder": [{"@type": "Person", "name": "Adam Park"}, {"@type": "Person", "name": "Sohum Kodilkar"}]}, {"@type": "WebPage", "name": "About · Young Medical Engineers", "description": "Young Medical Engineers is a nonprofit founded in 2026 by students at the Illinois Mathematics and Science Academy. Learn what we stand for, where we work, and how our free programs run.", "url": "https://www.medengineers.org/about.html", "isPartOf": {"@type": "WebSite", "name": "Young Medical Engineers", "url": "https://www.medengineers.org/"}, "about": {"@id": "https://www.medengineers.org/#organization"}}]}</script>
-<link rel="stylesheet" href="assets/style.css?v=2026-11-05a">
+<script>/* page fade for browsers without view transitions (see style.css) */if(!window.CSSViewTransitionRule&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("pt")</script>
+<link rel="stylesheet" href="assets/style.css?v=2026-11-05b">
 <script type="speculationrules">{"prefetch":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}]}</script>
 </head>
 <body class="still">
@@ -68,7 +69,7 @@
   <div class="container">
     <div class="page-hero__inner page-hero__inner--center">
       <h1>Who We Are</h1>
-      <p class="lede">At the Illinois Mathematics and Science Academy, Adam Park and Sohum Kodilkar noticed how few students their age had ever encountered medical engineering: the field behind prosthetics, imaging, drug discovery and the devices clinicians use every day. Most never hear of it until college, by which point the classes that lead into it are already behind them. Motivated by their passion for engineering and medicine and a desire to give back to their community, they founded Young Medical Engineers in 2026. Since then they have brought speakers, build events and free tutoring to students who would otherwise never have been offered them, including in India and Korea. Everything is free, and you only have to sign up.</p>
+      <p class="lede">At the Illinois Mathematics and Science Academy, Adam Park and Sohum Kodilkar noticed how few students their age had heard of medical engineering, the field behind prosthetics, imaging and the devices clinicians use every day. Most first meet it in college, after the classes that lead into it are behind them. In 2026 they founded Young Medical Engineers to change that, and have since brought free speakers, build events and tutoring to students who would otherwise miss out, including in India and Korea.</p>
     </div>
   </div>
 </section>
@@ -82,7 +83,7 @@
         <div class="member__body">
           <h3>Adam Park</h3>
           <div class="role">Co-Founder and Co-President</div>
-          <p>Adam is a junior at the Illinois Mathematics and Science Academy. He is passionate about pursuing a career in mechanical engineering. In his free time he enjoys weightlifting, building things, and listening to K-pop.</p>
+          <p>Adam is a junior at the Illinois Mathematics and Science Academy who plans a career in mechanical engineering. He enjoys weightlifting, building things, and listening to K-pop.</p>
         </div>
       </article>
       <article class="member">
@@ -90,7 +91,7 @@
         <div class="member__body">
           <h3>Sohum Kodilkar</h3>
           <div class="role">Co-Founder and Co-President</div>
-          <p>Sohum is a junior at the Illinois Mathematics and Science Academy. He is passionate about pursuing a career in medicine and aspires to become a cardiothoracic surgeon. In his free time he enjoys playing soccer and pickleball, weightlifting, and spending time with friends.</p>
+          <p>Sohum is a junior at the Illinois Mathematics and Science Academy who hopes to become a cardiothoracic surgeon. He enjoys soccer, pickleball, weightlifting, and spending time with friends.</p>
         </div>
       </article>
       <article class="member">
@@ -98,7 +99,7 @@
         <div class="member__body">
           <h3>Thomas Liu</h3>
           <div class="role">Treasurer</div>
-          <p>Thomas is a junior at the Illinois Mathematics and Science Academy. He is passionate about pursuing a career in biomedical engineering and enjoys exploring how the field can be used to solve real-world problems. Outside of academics, he enjoys playing tennis and violin.</p>
+          <p>Thomas is a junior at the Illinois Mathematics and Science Academy who plans a career in biomedical engineering, using it to solve real-world problems. He enjoys playing tennis and violin.</p>
         </div>
       </article>
       <article class="member">
@@ -106,7 +107,7 @@
         <div class="member__body">
           <h3>Wyatt Washburn</h3>
           <div class="role">Secretary</div>
-          <p>Wyatt is a junior at the Illinois Mathematics and Science Academy. He is passionate about pursuing a career in mechanical engineering. In his free time he enjoys weightlifting, reading, and hanging out with his friends.</p>
+          <p>Wyatt is a junior at the Illinois Mathematics and Science Academy who plans a career in mechanical engineering. He enjoys weightlifting, reading, and hanging out with his friends.</p>
         </div>
       </article>
       <article class="member">
@@ -245,6 +246,69 @@
   }
 
 
+
+  /* -- page transitions where the browser has no view transitions: the page
+     fades out before a link to another page opens, and the next one fades in (style.css) */
+  var root = document.documentElement;
+  if (root.classList.contains("pt")) {
+    document.addEventListener("click", function (e) {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      var a = e.target.closest && e.target.closest("a[href]");
+      if (!a || (a.target && a.target !== "_self") || a.hasAttribute("download")) return;
+      var url = new URL(a.href, location.href);
+      if (url.origin !== location.origin || !/(\/|\.html)$/.test(url.pathname)) return;
+      if (url.pathname === location.pathname && url.search === location.search) return; /* a link within this page */
+      e.preventDefault();
+      root.classList.add("pt-leave");
+      setTimeout(function () { location.href = url.href; }, 160);
+    });
+    /* coming back with the Back button shows the page again */
+    window.addEventListener("pageshow", function (e) { if (e.persisted) root.classList.remove("pt-leave"); });
+  }
+
+  /* -- impact counters: each number counts up once, when scrolled into view.
+     The target is read from the number written in the page (e.g. "$1,000"), so
+     updating a number means editing only that text. Screen readers get the
+     final number straight away. */
+  var counters = document.querySelectorAll(".stat__num");
+  if (counters.length && !reduceMotion && "IntersectionObserver" in window) {
+    var countUp = function (el) {
+      var m = el.dataset.final.match(/^(\D*)([\d,]+)(.*)$/);
+      var target = parseInt(m[2].replace(/,/g, ""), 10), start = null;
+      var step = function (ts) {
+        if (start === null) start = ts;
+        var p = Math.min((ts - start) / 1200, 1), eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = m[1] + Math.round(target * eased).toLocaleString("en-US") + m[3];
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+    var co = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        co.unobserve(en.target);
+        countUp(en.target.querySelector("[aria-hidden]"));
+      });
+    }, { threshold: 0.5 });
+    counters.forEach(function (num) {
+      var text = num.textContent.trim();
+      if (!/^\D*[\d,]+/.test(text)) return;
+      var shown = document.createElement("span");
+      shown.setAttribute("aria-hidden", "true");
+      shown.dataset.final = text;
+      shown.textContent = text;
+      var spoken = document.createElement("span");
+      spoken.className = "sr-only";
+      spoken.textContent = text;
+      num.textContent = "";
+      num.appendChild(spoken);
+      num.appendChild(shown);
+      shown.style.display = "inline-block";
+      shown.style.minWidth = shown.getBoundingClientRect().width + "px"; /* no shifting while it counts */
+      shown.textContent = text.replace(/[\d,]+/, "0");
+      co.observe(num);
+    });
+  }
 
   /* -- reveal on scroll (fade content in once, when scrolled into view) - */
   var reveals = document.querySelectorAll(".section__head, .pillar, .member, .session");

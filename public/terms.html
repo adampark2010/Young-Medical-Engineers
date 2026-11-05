@@ -19,7 +19,8 @@
 <link rel="canonical" href="https://www.medengineers.org/terms.html">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "NGO", "@id": "https://www.medengineers.org/#organization", "name": "Young Medical Engineers", "alternateName": "YME", "url": "https://www.medengineers.org/", "logo": "https://www.medengineers.org/assets/logo-full.png", "email": "youngmedicalengineers@gmail.com", "foundingDate": "2026", "description": "A nonprofit founded and run by high school students that introduces students to medical engineering through free tutoring, keynote talks, design challenges, and hands-on demonstrations.", "sameAs": ["https://www.instagram.com/ym_engineers"], "founder": [{"@type": "Person", "name": "Adam Park"}, {"@type": "Person", "name": "Sohum Kodilkar"}]}, {"@type": "WebPage", "name": "Terms of Use · Young Medical Engineers", "description": "The terms for using the Young Medical Engineers website and taking part in its free programs.", "url": "https://www.medengineers.org/terms.html", "isPartOf": {"@type": "WebSite", "name": "Young Medical Engineers", "url": "https://www.medengineers.org/"}, "about": {"@id": "https://www.medengineers.org/#organization"}}]}</script>
-<link rel="stylesheet" href="assets/style.css?v=2026-11-05a">
+<script>/* page fade for browsers without view transitions (see style.css) */if(!window.CSSViewTransitionRule&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("pt")</script>
+<link rel="stylesheet" href="assets/style.css?v=2026-11-05b">
 <script type="speculationrules">{"prefetch":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}]}</script>
 </head>
 <body>
@@ -78,15 +79,15 @@
     <div class="prose prose--wide">
       <p><strong>Using this site.</strong> By using medengineers.org you agree to these terms. If you are under 18, please read them with a parent or guardian. If you do not agree, please do not use the site.</p>
 
-      <p><strong>Our programs.</strong> Our talks, build events, design challenges and tutoring are free. Places at events can be limited, and we may change or cancel a session when we need to; if you signed up, we will tell you. Students under 18 need a parent or guardian&rsquo;s permission to sign up for tutoring or an event, and our sign-up forms ask you to confirm it. Students under 13 should have a parent or guardian fill in the form for them.</p>
+      <p><strong>Our programs.</strong> Our talks, build events, design challenges and tutoring are free. Places can be limited, and we may change or cancel a session; if you signed up, we will tell you. Students under 18 need a parent or guardian&rsquo;s permission to sign up, and our forms ask you to confirm it. Students under 13 should have a parent or guardian fill in the form.</p>
 
       <p><strong>Everyone is welcome.</strong> Our programs are open to every student. We do not discriminate on the basis of race, colour, religion, sex, gender identity, sexual orientation, national origin, ancestry, disability, or any other characteristic protected by law, in our programs, in volunteering with us, or on our board.</p>
 
       <p><strong>Taking part respectfully.</strong> We ask everyone at our events and tutoring sessions to treat others with respect and to follow the safety instructions for any hands-on activity. We may decline or end someone&rsquo;s participation if their behaviour puts others at risk or keeps others from learning.</p>
 
-      <p><strong>Education, not advice.</strong> Our articles, talks and tutoring are for learning about medical engineering. Nothing on this site is medical advice or a substitute for a doctor, and mentioning a device, product or company is not an endorsement. Tutoring supports your schoolwork; it is not connected to your school, and we cannot promise any particular grade or result.</p>
+      <p><strong>Education, not advice.</strong> Our articles, talks and tutoring are for learning. Nothing here is medical advice, and mentioning a device, product or company is not an endorsement. Tutoring is not connected to your school, and we cannot promise any particular grade or result.</p>
 
-      <p><strong>Our name and content.</strong> The text, design and logo of this site belong to Young Medical Engineers. You are welcome to link to any page and to quote short passages with credit. Please do not use our name or logo in a way that suggests we endorse you or your work. Articles, photos and other material from other sources belong to their owners. If you believe something here uses your work without permission, email us and we will look into it and remove it if needed.</p>
+      <p><strong>Our name and content.</strong> This site&rsquo;s text, design and logo belong to Young Medical Engineers. You may link to any page and quote short passages with credit, but please do not use our name or logo to suggest we endorse you. Material from other sources belongs to its owners. If you think something here uses your work without permission, email us and we will remove it if needed.</p>
 
       <p><strong>Links to other sites.</strong> We link to news stories, PayPal, Instagram and other sites we think are useful. We do not control them and are not responsible for their content or how they handle your information.</p>
 
@@ -100,7 +101,7 @@
 
       <p><strong>Contact.</strong> Questions about these terms go to <a href="mailto:youngmedicalengineers@gmail.com">youngmedicalengineers@gmail.com</a>.</p>
 
-      <p class="footnote">Last updated 4 November 2026.</p>
+      <p class="footnote">Last updated 5 November 2026.</p>
     </div>
   </div>
 </section>
@@ -197,6 +198,69 @@
   }
 
 
+
+  /* -- page transitions where the browser has no view transitions: the page
+     fades out before a link to another page opens, and the next one fades in (style.css) */
+  var root = document.documentElement;
+  if (root.classList.contains("pt")) {
+    document.addEventListener("click", function (e) {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      var a = e.target.closest && e.target.closest("a[href]");
+      if (!a || (a.target && a.target !== "_self") || a.hasAttribute("download")) return;
+      var url = new URL(a.href, location.href);
+      if (url.origin !== location.origin || !/(\/|\.html)$/.test(url.pathname)) return;
+      if (url.pathname === location.pathname && url.search === location.search) return; /* a link within this page */
+      e.preventDefault();
+      root.classList.add("pt-leave");
+      setTimeout(function () { location.href = url.href; }, 160);
+    });
+    /* coming back with the Back button shows the page again */
+    window.addEventListener("pageshow", function (e) { if (e.persisted) root.classList.remove("pt-leave"); });
+  }
+
+  /* -- impact counters: each number counts up once, when scrolled into view.
+     The target is read from the number written in the page (e.g. "$1,000"), so
+     updating a number means editing only that text. Screen readers get the
+     final number straight away. */
+  var counters = document.querySelectorAll(".stat__num");
+  if (counters.length && !reduceMotion && "IntersectionObserver" in window) {
+    var countUp = function (el) {
+      var m = el.dataset.final.match(/^(\D*)([\d,]+)(.*)$/);
+      var target = parseInt(m[2].replace(/,/g, ""), 10), start = null;
+      var step = function (ts) {
+        if (start === null) start = ts;
+        var p = Math.min((ts - start) / 1200, 1), eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = m[1] + Math.round(target * eased).toLocaleString("en-US") + m[3];
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+    var co = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        co.unobserve(en.target);
+        countUp(en.target.querySelector("[aria-hidden]"));
+      });
+    }, { threshold: 0.5 });
+    counters.forEach(function (num) {
+      var text = num.textContent.trim();
+      if (!/^\D*[\d,]+/.test(text)) return;
+      var shown = document.createElement("span");
+      shown.setAttribute("aria-hidden", "true");
+      shown.dataset.final = text;
+      shown.textContent = text;
+      var spoken = document.createElement("span");
+      spoken.className = "sr-only";
+      spoken.textContent = text;
+      num.textContent = "";
+      num.appendChild(spoken);
+      num.appendChild(shown);
+      shown.style.display = "inline-block";
+      shown.style.minWidth = shown.getBoundingClientRect().width + "px"; /* no shifting while it counts */
+      shown.textContent = text.replace(/[\d,]+/, "0");
+      co.observe(num);
+    });
+  }
 
   /* -- reveal on scroll (fade content in once, when scrolled into view) - */
   var reveals = document.querySelectorAll(".section__head, .pillar, .member, .session");

@@ -527,6 +527,8 @@ main > .section--tint:last-child{ border-bottom:0; }
 .page-hero__inner--center{ margin-inline:auto; text-align:center; }
 .page-hero__inner--center .section__foot{ display:flex; flex-wrap:wrap; justify-content:center; gap:.75rem; }
 .page-hero__inner--center .note{ max-width:60ch; margin-inline:auto; }
+/* Donate: the tax-status note sits apart from the buttons, under a thin rule */
+.page-hero__inner--center .donate-note{ max-width:52ch; margin-top:clamp(3rem, 7vw, 4.5rem); padding-top:1.5rem; border-top:1px solid var(--border); font-size:.9rem; line-height:1.6; }
 .page-hero .page-hero__inner--center{ max-width:none; }
 .page-hero .page-hero__inner--center h1{ max-width:none; margin-inline:auto; }
 /* every page's description: centred, in a reading-width column */
@@ -981,6 +983,10 @@ body > .site-footer{ flex-shrink:0; }
 .site-header{ view-transition-name:site-header; }
 @keyframes vt-out{ to{ opacity:0; } }
 @keyframes vt-in{ from{ opacity:0; transform:translateY(8px); } }
+/* the same fade where cross-document view transitions are not supported (Firefox, older Safari):
+   the head script adds .pt to <html>, and the shared script adds .pt-leave before following a link */
+.pt body > main{ animation:vt-in 320ms cubic-bezier(.2,.7,.2,1) backwards; }
+.pt.pt-leave body > main{ opacity:0; transition:opacity 160ms ease-out; }
 
 /* ---- photo-led hero panel ------------------------------------------- */
 /* The headline sits in a solid block over the photograph rather than
@@ -1074,3 +1080,4 @@ body > .site-footer{ flex-shrink:0; }
 .section--black .newsitem__links a{ color:#fff; text-underline-offset:3px; }
 .section--black .newsitem__links a:hover{ color:var(--red-light); }
 .section--black .agenda__status{ color:rgba(255,255,255,.72); }
+.nowrap{ white-space:nowrap; }

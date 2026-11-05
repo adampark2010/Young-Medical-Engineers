@@ -19,7 +19,8 @@
 <link rel="canonical" href="https://www.medengineers.org/donate.html">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "NGO", "@id": "https://www.medengineers.org/#organization", "name": "Young Medical Engineers", "alternateName": "YME", "url": "https://www.medengineers.org/donate.html", "logo": "https://www.medengineers.org/assets/logo-full.png", "email": "youngmedicalengineers@gmail.com", "foundingDate": "2026", "description": "A nonprofit founded and run by high school students that introduces students to medical engineering through free tutoring, keynote talks, design challenges, and hands-on demonstrations.", "sameAs": ["https://www.instagram.com/ym_engineers"], "founder": [{"@type": "Person", "name": "Adam Park"}, {"@type": "Person", "name": "Sohum Kodilkar"}]}, {"@type": "WebPage", "name": "Donate · Young Medical Engineers", "description": "Support free tutoring, keynote speakers, and design challenges for students exploring medical engineering. Every gift goes directly into free programs.", "url": "https://www.medengineers.org/donate.html", "isPartOf": {"@type": "WebSite", "name": "Young Medical Engineers", "url": "https://www.medengineers.org/donate.html"}, "about": {"@id": "https://www.medengineers.org/#organization"}}]}</script>
-<link rel="stylesheet" href="assets/style.css?v=2026-11-05a">
+<script>/* page fade for browsers without view transitions (see style.css) */if(!window.CSSViewTransitionRule&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("pt")</script>
+<link rel="stylesheet" href="assets/style.css?v=2026-11-05b">
 <script type="speculationrules">{"prefetch":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}]}</script>
 </head>
 <body>
@@ -68,12 +69,12 @@
   <div class="container">
     <div class="page-hero__inner page-hero__inner--center">
       <h1>Donate</h1>
-      <p class="lede">Every program we run is free, so what we raise is simply what decides how many students we reach. It pays for the equipment that travels to build events, and for getting a program into a school that would not otherwise get one. We are a student team with almost no overhead, so a gift turns into a session in a classroom rather than into running the organisation.</p>
+      <p class="lede">Every program we run is free, so what we raise decides how many students we reach. Gifts pay for equipment for our build events and for bringing programs to schools that would not otherwise get them. We are a student team with almost no overhead, so your gift goes to students, not to running the organization.</p>
       <p class="section__foot">
         <a class="btn btn--primary" href="https://www.paypal.com/donate/?business=youngmedicalengineers%40gmail.com&amp;currency_code=USD&amp;item_name=Young+Medical+Engineers" target="_blank" rel="noopener">Donate With PayPal<span class="sr-only"> (opens in a new tab)</span></a>
         <a class="btn btn--secondary" href="mailto:youngmedicalengineers@gmail.com?subject=Donation%20%2F%20partnership">Give Another Way</a>
       </p>
-      <p class="note">Young Medical Engineers is organized as a nonprofit and is pursuing federal 501(c)(3) recognition. Until that is granted, donations are not tax-deductible. We will say so here the moment it changes. See our <a href="donation-policy.html">Donation Policy</a> for how gifts are handled.</p>
+      <p class="note donate-note">Young Medical Engineers is organized as a nonprofit and is pursuing federal 501(c)(3) recognition, so donations are not yet <span class="nowrap">tax-deductible</span>. We will update this page when that changes. See our <a href="donation-policy.html">Donation Policy</a> for how gifts are handled.</p>
     </div>
   </div>
 </section>
@@ -170,6 +171,69 @@
   }
 
 
+
+  /* -- page transitions where the browser has no view transitions: the page
+     fades out before a link to another page opens, and the next one fades in (style.css) */
+  var root = document.documentElement;
+  if (root.classList.contains("pt")) {
+    document.addEventListener("click", function (e) {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      var a = e.target.closest && e.target.closest("a[href]");
+      if (!a || (a.target && a.target !== "_self") || a.hasAttribute("download")) return;
+      var url = new URL(a.href, location.href);
+      if (url.origin !== location.origin || !/(\/|\.html)$/.test(url.pathname)) return;
+      if (url.pathname === location.pathname && url.search === location.search) return; /* a link within this page */
+      e.preventDefault();
+      root.classList.add("pt-leave");
+      setTimeout(function () { location.href = url.href; }, 160);
+    });
+    /* coming back with the Back button shows the page again */
+    window.addEventListener("pageshow", function (e) { if (e.persisted) root.classList.remove("pt-leave"); });
+  }
+
+  /* -- impact counters: each number counts up once, when scrolled into view.
+     The target is read from the number written in the page (e.g. "$1,000"), so
+     updating a number means editing only that text. Screen readers get the
+     final number straight away. */
+  var counters = document.querySelectorAll(".stat__num");
+  if (counters.length && !reduceMotion && "IntersectionObserver" in window) {
+    var countUp = function (el) {
+      var m = el.dataset.final.match(/^(\D*)([\d,]+)(.*)$/);
+      var target = parseInt(m[2].replace(/,/g, ""), 10), start = null;
+      var step = function (ts) {
+        if (start === null) start = ts;
+        var p = Math.min((ts - start) / 1200, 1), eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = m[1] + Math.round(target * eased).toLocaleString("en-US") + m[3];
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+    var co = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        co.unobserve(en.target);
+        countUp(en.target.querySelector("[aria-hidden]"));
+      });
+    }, { threshold: 0.5 });
+    counters.forEach(function (num) {
+      var text = num.textContent.trim();
+      if (!/^\D*[\d,]+/.test(text)) return;
+      var shown = document.createElement("span");
+      shown.setAttribute("aria-hidden", "true");
+      shown.dataset.final = text;
+      shown.textContent = text;
+      var spoken = document.createElement("span");
+      spoken.className = "sr-only";
+      spoken.textContent = text;
+      num.textContent = "";
+      num.appendChild(spoken);
+      num.appendChild(shown);
+      shown.style.display = "inline-block";
+      shown.style.minWidth = shown.getBoundingClientRect().width + "px"; /* no shifting while it counts */
+      shown.textContent = text.replace(/[\d,]+/, "0");
+      co.observe(num);
+    });
+  }
 
   /* -- reveal on scroll (fade content in once, when scrolled into view) - */
   var reveals = document.querySelectorAll(".section__head, .pillar, .member, .session");
