@@ -45,11 +45,24 @@ CREATE TABLE IF NOT EXISTS form_submissions (
 );
 CREATE INDEX IF NOT EXISTS form_submissions_created ON form_submissions (created_at DESC);
 
+-- The Articles pages, edited on /admin (lib/posts.js): kind is article or podcast (In the News)
+-- or update (Our Updates); data holds the post's fields, named as in news.json and updates.json.
+CREATE TABLE IF NOT EXISTS posts (
+  id UUID PRIMARY KEY,
+  kind TEXT NOT NULL CHECK (kind IN ('article', 'podcast', 'update')),
+  data JSONB NOT NULL,
+  created_by VARCHAR(40) NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS posts_kind ON posts (kind);
+
 -- When the website has its own login (db/site-role.sql), let it read, add and delete rows in every
 -- table above, including any a later update adds. Does nothing until that login exists.
 DO $$ BEGIN
   IF EXISTS (SELECT FROM pg_roles WHERE rolname = 'yme_site') THEN
     GRANT USAGE ON SCHEMA public TO yme_site;
     GRANT SELECT, INSERT, DELETE ON sessions, signups, form_submissions TO yme_site;
+    GRANT SELECT, INSERT, UPDATE, DELETE ON posts TO yme_site; -- posts can be edited
   END IF;
 END $$;

@@ -7,9 +7,10 @@ import { createAdminHandler } from './lib/admin.js';
 import { createSessionsHandler } from './lib/sessions.js';
 import { createSignupsHandler } from './lib/signups.js';
 import { createFormsHandler } from './lib/forms.js';
+import { createPostsHandler } from './lib/posts.js';
 import { createStore } from './lib/database.js';
 
-const HANDLERS = { sessions: createSessionsHandler, signups: createSignupsHandler, forms: createFormsHandler };
+const HANDLERS = { sessions: createSessionsHandler, signups: createSignupsHandler, forms: createFormsHandler, posts: createPostsHandler };
 
 /* the Worker's own answers always ask for HTTPS (files from public/ get this from public/_headers) */
 function secure(response) {
@@ -22,7 +23,7 @@ export function createWorker({ storeFactory = createStore } = {}) {
   return {
     async fetch(request, env) {
       const { pathname } = new URL(request.url);
-      const api = /^\/(?:admin\/)?api\/(sessions|signups|forms)$/.exec(pathname);
+      const api = /^\/(?:admin\/)?api\/(sessions|signups|forms|posts)$/.exec(pathname);
       if (api) return secure(await HANDLERS[api[1]]({ env, storeFactory })(request));
       if (pathname === '/admin' || pathname === '/admin/') return secure(await createAdminHandler({ env })(request));
       /* html_handling is "none" so pages keep their .html addresses; the home page still answers at / */

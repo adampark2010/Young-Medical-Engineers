@@ -811,6 +811,19 @@ label.admin-item__pick{ cursor:pointer; }
 .tab:hover,.tab[aria-selected="true"]{ color:var(--primary-deep); }
 .tab[aria-selected="true"]::after{ content:""; position:absolute; left:0; right:0; bottom:-1px; height:3px; background:var(--accent); }
 .tab__count:not(:empty){ padding:.05rem .45rem; background:var(--tint); font-size:.8rem; color:var(--primary-deep); }
+/* two rows of tabs on /admin: the main row (Sessions, Articles), then small sub-tabs inside each */
+.tabs--main .tab{ font-size:1.1rem; min-height:52px; }
+.tabs--sub{ gap:.5rem; border-bottom:0; margin-bottom:clamp(1.5rem, 3vw, 2rem); }
+.tabs--sub .tab{ min-height:40px; padding:0 1rem; border:1px solid var(--border); border-radius:var(--radius-btn); font-size:.92rem; }
+.tabs--sub .tab:hover{ border-color:var(--brand-navy); }
+.tabs--sub .tab[aria-selected="true"]{ background:var(--brand-navy); border-color:var(--brand-navy); color:#fff; }
+.tabs--sub .tab[aria-selected="true"]::after{ display:none; }
+.tabs--sub .tab[aria-selected="true"] .tab__count:not(:empty){ background:rgba(255,255,255,.18); color:#fff; }
+/* an article or update in the admin list: its text, then an Edit button on the right */
+.admin-item--edit{ display:flex; align-items:center; gap:1rem; padding-right:1.25rem; }
+.admin-item--edit > :first-child{ flex:1; min-width:0; }
+.admin-import{ display:grid; justify-items:start; gap:.75rem; margin-top:1rem; padding:1rem 1.25rem; background:var(--tint); border:1px solid var(--border); font-size:.95rem; }
+.field textarea.admin-textarea--tall{ min-height:14rem; }
 .btn--small{ min-height:40px; padding:.5rem 1rem; font-size:.9rem; }
 .signups__bar{ display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem 2rem; margin-bottom:1.5rem; }
 .signups__summary{ color:var(--ink); }

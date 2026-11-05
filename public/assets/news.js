@@ -1,4 +1,5 @@
-/* Latest News: links out to other people's reporting, read from news.json.
+/* Latest News: links out to other people's reporting, added on /admin (the database) or, until any
+   are, read from news.json.
    Kept as data rather than hand-written HTML so the list is easy to update.
    Search indexing does not matter here: these pages are not ours to rank. */
 (function () {
@@ -80,9 +81,26 @@
     return li;
   }
 
-  fetch("news.json", { cache: "no-cache" })
-    .then(function (r) { if (!r.ok) throw new Error("news.json " + r.status); return r.json(); })
-    .then(function (data) {
+  /* a source that is slow or missing gives up after 8 seconds, so the other one still shows */
+  function load(url) {
+    var stop = window.AbortController ? new AbortController() : null;
+    var timer = stop && setTimeout(function () { stop.abort(); }, 8000);
+    return fetch(url, { headers: { Accept: "application/json" }, cache: "no-cache", signal: stop ? stop.signal : undefined })
+      .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .catch(function () { return null; })
+      .then(function (data) { clearTimeout(timer); return data; });
+  }
+
+  /* Entries added on /admin (the database) are used when there are any; otherwise news.json. */
+  Promise.all([load("api/posts?page=news"), load("news.json")])
+    .then(function (sources) {
+      var posts = sources[0] && Array.isArray(sources[0].posts) ? sources[0].posts : [];
+      var data = sources[1];
+      if (posts.length) {
+        data = { articles: [], podcasts: [] };
+        posts.forEach(function (p) { (p.kind === "podcast" ? data.podcasts : data.articles).push(p.data || {}); });
+      }
+      if (!data) throw new Error("no news");
       var any = false;
       Object.keys(lists).forEach(function (key) {
         var el = lists[key];

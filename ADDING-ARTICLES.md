@@ -1,3 +1,23 @@
+# Editing In the News and Our Updates
+
+The easiest way is the admin page: open **/admin**, choose **Articles**, then
+**In the News** or **Our Updates**. Fill in the form and click **Add to the
+Page**; it shows on the website straight away. **Edit** next to an entry opens it
+in the form, and **Delete Selected** removes ticked entries (it asks for the
+delete password).
+
+The first time, the list says the page is showing entries from `news.json` or
+`updates.json`. Click **Copy Them In to Edit** to bring those in. Once anything
+has been added on the admin page, the website shows only what is listed there,
+and the two files below are only a backup (they are also what GitHub Pages shows,
+since it has no database).
+
+Pictures are given as a link (`https://...`) or as a file already in the site,
+such as `assets/updates/photo.jpg`. Uploading pictures from the admin page is not
+built in.
+
+The rest of this file explains the two files, for editing them by hand.
+
 # Adding one of our own updates
 
 **Our Updates** (`updates.html`) is YME's own news: an event we ran, a meeting

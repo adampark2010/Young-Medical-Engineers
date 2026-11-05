@@ -8,7 +8,7 @@ const basic = (name, password) => 'Basic ' + Buffer.from(`${name}:${password}`).
 /* Stands in for Cloudflare's static files: answers with the path it was asked for. */
 const assets = { async fetch(request) { return new Response(`file ${new URL(request.url).pathname}`); } };
 const env = { DATABASE_URL: 'test', ADMIN_LOGINS: 'derrick:pass-one', DELETE_PASSWORD: 'delete-me', ASSETS: assets };
-const store = { async upcoming() { return [{ id: 'one' }]; }, async signups() { return []; }, async formSubmissions() { return [{ id: 'f1' }]; } };
+const store = { async upcoming() { return [{ id: 'one' }]; }, async signups() { return []; }, async formSubmissions() { return [{ id: 'f1' }]; }, async posts(kinds) { return kinds.map(k => ({ id: k, kind: k, data: {} })); } };
 const worker = createWorker({ storeFactory: () => store });
 
 test('Cloudflare worker: the API and admin page run here, with settings from env', async () => {
@@ -25,6 +25,8 @@ test('Cloudflare worker: the API and admin page run here, with settings from env
   assert.deepEqual((await forms.json()).submissions, [{ id: 'f1' }], 'the admin page reads through /admin/api/...');
   assert.equal((await worker.fetch(new Request(`${SITE}/admin/api/forms`), env)).status, 401);
   assert.equal((await worker.fetch(new Request(`${SITE}/admin/api/nothing`), env)).status, 200, 'anything else is left to the files');
+  const news = await worker.fetch(new Request(`${SITE}/api/posts?page=news`), env);
+  assert.deepEqual((await news.json()).posts.map(p => p.kind), ['article', 'podcast'], 'the Articles pages read /api/posts');
   const noLogins = await worker.fetch(new Request(`${SITE}/admin`), { ...env, ADMIN_LOGINS: '' });
   assert.match((await noLogins.json()).error, /ADMIN_LOGINS in Cloudflare/);
 });

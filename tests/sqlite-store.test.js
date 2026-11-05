@@ -62,6 +62,17 @@ test('local SQLite store: add, list, keep past ones out of the public list, remo
     assert.match(forms[1].created_at, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/);
     assert.equal(await store.removeFormSubmissions([ask.id, tutor.id, randomUUID()]), 2);
     assert.deepEqual(await store.formSubmissions(), []);
+
+    // posts: newest date first, saved changes replace, only the asked-for kinds
+    const older = { id: randomUUID(), kind: 'article', data: { title: 'Older', date: '2026-01-01' }, createdBy: 'adam' };
+    const newer = { id: randomUUID(), kind: 'update', data: { title: 'Newer', date: '2026-06-01', body: ['Hi'] }, createdBy: 'adam' };
+    await store.savePost(older);
+    await store.savePost(newer);
+    await store.savePost({ ...older, data: { title: 'Older, edited', date: '2026-01-01' } });
+    assert.deepEqual((await store.posts(['article', 'update'])).map(p => p.data.title), ['Newer', 'Older, edited']);
+    assert.deepEqual((await store.posts(['update'])).map(p => p.id), [newer.id]);
+    assert.equal(await store.removePosts([older.id, newer.id]), 2);
+    assert.deepEqual(await store.posts(['article', 'podcast', 'update']), []);
   } finally {
     store.close();
     rmSync(dir, { recursive: true, force: true });

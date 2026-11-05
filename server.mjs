@@ -11,6 +11,7 @@ import { createSqliteStore } from './lib/sqlite-store.js';
 import { createSessionsHandler } from './lib/sessions.js';
 import { createSignupsHandler } from './lib/signups.js';
 import { createFormsHandler } from './lib/forms.js';
+import { createPostsHandler } from './lib/posts.js';
 import { createAdminHandler } from './lib/admin.js';
 
 const root = dirname(fileURLToPath(import.meta.url));
@@ -27,6 +28,7 @@ const env = {
 const sessions = createSessionsHandler({ env, storeFactory: () => store });
 const signups = createSignupsHandler({ env, storeFactory: () => store });
 const forms = createFormsHandler({ env, storeFactory: () => store });
+const posts = createPostsHandler({ env, storeFactory: () => store });
 const admin = createAdminHandler({ env });
 
 const TYPES = {
@@ -66,8 +68,8 @@ const server = createServer(async (req, res) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   try {
     const { pathname } = new URL(req.url, 'http://localhost');
-    const api = /^\/(?:admin\/)?api\/(sessions|signups|forms)$/.exec(pathname); /* as in worker.js */
-    if (api) return await send(res, await { sessions, signups, forms }[api[1]](toRequest(req)));
+    const api = /^\/(?:admin\/)?api\/(sessions|signups|forms|posts)$/.exec(pathname); /* as in worker.js */
+    if (api) return await send(res, await { sessions, signups, forms, posts }[api[1]](toRequest(req)));
     if (pathname === '/admin' || pathname === '/admin/') return await send(res, await admin(toRequest(req)));
     if (!['GET', 'HEAD'].includes(req.method)) { res.writeHead(405, { Allow: 'GET, HEAD' }); return res.end('Method not allowed'); }
     return await serveFile(req, res, pathname);

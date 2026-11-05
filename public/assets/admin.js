@@ -1,8 +1,9 @@
-/* Young Medical Engineers: session manager (/admin).
+/* Young Medical Engineers: the admin page (/admin). Two groups of tabs: Sessions and Articles.
    Sessions tab: adds sessions through /admin/api/sessions (they go live at once), lists them, and
    deletes the ticked ones. Sign-Ups tab: everyone who signed up on the website (/admin/api/signups),
    grouped by session, with copy emails, a CSV download, and delete. Forms tab: tutoring requests,
-   volunteer applications and messages (/admin/api/forms), with delete. Deleting always asks for the
+   volunteer applications and messages (/admin/api/forms), with delete. Articles: In the News and Our
+   Updates (/admin/api/posts), added, edited and deleted. Deleting always asks for the
    separate delete password, which is never stored. The browser sends the admin sign-in with each
    request. */
 (function () {
@@ -410,34 +411,208 @@
     return Promise.resolve(ok);
   }
 
-  /* -- tabs (the address remembers the open one: /admin#signups) -------- */
-  var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  /* -- Articles: In the News and Our Updates (/admin/api/posts) ------------ */
+  /* One editor per sub-tab: a form that adds a post, or saves changes to the one being edited, and
+     the list with Edit, Select all and Delete Selected. Until anything is added here the page shows
+     its file (news.json or updates.json), which can be copied in with one click. */
+  function postEditor(o) {
+    var p = o.prefix, form = $(p + "-form"), saveBtn = $(p + "-save"), cancel = $(p + "-cancel");
+    var note = $(p + "-form-status"), heading = $(p + "-heading"), list = $(p + "-list");
+    var editing = null, pendingId = null, busy = false;
+    var pick = picker({
+      ids: { list: p + "-list", tools: p + "-tools", all: p + "-all", del: p + "-delete", form: p + "-del-form", text: p + "-del-text",
+        pass: p + "-del-pass", go: p + "-del-go", cancel: p + "-del-cancel", msg: p + "-msg", status: p + "-status", off: p + "-del-off" },
+      noun: o.noun, endpoint: "/admin/api/posts",
+      warning: "They disappear from the page straight away and can't be brought back.", reload: load
+    });
+    function mode(post) {
+      editing = post;
+      heading.textContent = post ? "Edit “" + post.data.title + "”" : o.addTitle;
+      saveBtn.textContent = post ? "Save Changes" : "Add to the Page";
+      cancel.hidden = !post;
+    }
+    function edit(post) {
+      form.reset();
+      o.fill(post);
+      mode(post);
+      note.textContent = "";
+      form.scrollIntoView({ behavior: "smooth", block: "start" });
+      form.querySelector("input, select, textarea").focus({ preventScroll: true });
+    }
+    cancel.addEventListener("click", function () { form.reset(); mode(null); note.textContent = ""; });
+    form.addEventListener("input", function () { if (!editing) pendingId = null; note.textContent = ""; });
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (busy) return;
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+      var body = o.read();
+      body.id = editing ? editing.id : (pendingId = pendingId || uuid()); /* a retry never adds it twice */
+      busy = true;
+      saveBtn.setAttribute("aria-busy", "true");
+      note.textContent = "Saving…";
+      var wasEditing = Boolean(editing);
+      send("/admin/api/posts", "POST", body).then(function () {
+        pendingId = null;
+        form.reset();
+        mode(null);
+        note.textContent = wasEditing ? "Saved. The page shows the change now." : "Added. It's on the page now.";
+        load();
+      }).catch(function (err) {
+        note.textContent = err.message;
+      }).then(function () {
+        busy = false;
+        saveBtn.removeAttribute("aria-busy");
+      });
+    });
+
+    var importBox = $(p + "-import"), importText = $(p + "-import-text"), importGo = $(p + "-import-go"), fileItems = [];
+    importGo.addEventListener("click", function () {
+      importGo.disabled = true;
+      importGo.setAttribute("aria-busy", "true");
+      $(p + "-msg").textContent = "";
+      /* one at a time, oldest first, so the page keeps the same order */
+      fileItems.slice().reverse().reduce(function (chain, item) {
+        return chain.then(function () { var body = o.fromFile(item); body.id = uuid(); return send("/admin/api/posts", "POST", body); });
+      }, Promise.resolve()).then(function () {
+        $(p + "-status").textContent = "Copied in. You can edit them now.";
+      }).catch(function (err) {
+        $(p + "-msg").textContent = err.message;
+      }).then(function () {
+        importGo.disabled = false;
+        importGo.removeAttribute("aria-busy");
+        load();
+      });
+    });
+
+    function load() {
+      $(p + "-msg").textContent = "";
+      return get("/admin/api/posts?scope=admin", "Could not load the articles.").then(function (data) {
+        var posts = (data.posts || []).filter(function (x) { return o.kinds.indexOf(x.kind) !== -1; });
+        var canDelete = Boolean(data.canDelete);
+        list.textContent = "";
+        $(o.count).textContent = posts.length ? String(posts.length) : "";
+        posts.forEach(function (post) {
+          var li = pick.row(post.id, post.data.title, o.lines(post), canDelete);
+          li.classList.add("admin-item--edit");
+          var btn = el("button", "btn btn--secondary btn--small", "Edit");
+          btn.type = "button";
+          btn.setAttribute("aria-label", "Edit “" + post.data.title + "”");
+          btn.addEventListener("click", function () { edit(post); });
+          li.appendChild(btn);
+          list.appendChild(li);
+        });
+        pick.ready(canDelete, posts.length);
+        importBox.hidden = true;
+        if (posts.length) return;
+        list.appendChild(el("li", "builder__empty", "Nothing added here yet. Use the form to add the first one."));
+        /* nothing in the database yet: offer to copy in what the page shows from its file */
+        return fetch(o.file, { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (file) {
+          fileItems = file ? o.fileItems(file) : [];
+          if (!fileItems.length) return;
+          importText.textContent = "The page is showing " + fileItems.length + (fileItems.length === 1 ? " entry" : " entries") +
+            " from " + o.file + ". Copy them in here to edit or remove them; once anything is added here, the page shows only what is listed here.";
+          importBox.hidden = false;
+        }).catch(function () {});
+      }).catch(function (err) { pick.error(err.message); });
+    }
+    return { load: load };
+  }
+
+  function when(iso) {
+    var d = iso ? new Date(iso + "T00:00:00") : null;
+    return d && !isNaN(d) ? S.MONTHS_LONG[d.getMonth()].slice(0, 3) + " " + d.getDate() + ", " + d.getFullYear() : "";
+  }
+  var news = postEditor({
+    prefix: "n", kinds: ["article", "podcast"], noun: ["entry", "entries"], count: "t-news-count",
+    addTitle: "Add to In the News", file: "/news.json",
+    read: function () {
+      return { kind: $("n-kind").value, title: value("n-title"), source: value("n-source"), date: $("n-date").value,
+        url: value("n-url"), note: value("n-note"), image: value("n-image"), credit: value("n-credit") };
+    },
+    fill: function (post) {
+      var d = post.data;
+      $("n-kind").value = post.kind; $("n-title").value = d.title || ""; $("n-source").value = d.source || "";
+      $("n-date").value = d.date || ""; $("n-url").value = d.url || ""; $("n-note").value = d.note || "";
+      $("n-image").value = d.image || ""; $("n-credit").value = d.credit || "";
+    },
+    lines: function (post) {
+      return [{ text: (post.kind === "podcast" ? "Podcast" : "Article") + " · " + post.data.source + " · " + when(post.data.date) },
+        post.data.note ? { text: post.data.note, cls: "admin-item__who" } : null];
+    },
+    fileItems: function (file) {
+      return [].concat((file.articles || []).map(function (i) { return { kind: "article", item: i }; }),
+        (file.podcasts || []).map(function (i) { return { kind: "podcast", item: i }; }));
+    },
+    fromFile: function (x) {
+      var i = x.item;
+      return { kind: x.kind, title: i.title, source: i.source, date: i.date, url: i.url, note: i.note || "", image: i.image || "", credit: i.credit || "" };
+    }
+  });
+  var updates = postEditor({
+    prefix: "u", kinds: ["update"], noun: ["update", "updates"], count: "t-updates-count",
+    addTitle: "Add an Update", file: "/updates.json",
+    read: function () {
+      return { kind: "update", title: value("u-title"), label: value("u-label"), date: $("u-date").value, body: $("u-body").value,
+        image: value("u-image"), alt: value("u-alt"), credit: value("u-credit"),
+        links: [{ text: value("u-l1-text"), href: value("u-l1-href") }, { text: value("u-l2-text"), href: value("u-l2-href") }] };
+    },
+    fill: function (post) {
+      var d = post.data, links = d.links || [];
+      $("u-title").value = d.title || ""; $("u-label").value = d.label || ""; $("u-date").value = d.date || "";
+      $("u-body").value = (d.body || []).join("\n\n"); $("u-image").value = d.image || ""; $("u-alt").value = d.alt || "";
+      $("u-credit").value = d.credit || "";
+      $("u-l1-text").value = links[0] ? links[0].text : ""; $("u-l1-href").value = links[0] ? links[0].href : "";
+      $("u-l2-text").value = links[1] ? links[1].text : ""; $("u-l2-href").value = links[1] ? links[1].href : "";
+    },
+    lines: function (post) {
+      var first = (post.data.body || [])[0] || "";
+      return [{ text: [post.data.label, when(post.data.date)].filter(Boolean).join(" · ") },
+        first ? { text: first.length > 140 ? first.slice(0, 140) + "…" : first, cls: "admin-item__who" } : null];
+    },
+    fileItems: function (file) { return file.updates || []; },
+    fromFile: function (u) {
+      return { kind: "update", title: u.title, label: u.kind || "", date: u.date, body: u.body || [], image: u.image || "",
+        alt: u.alt || "", credit: u.credit || "", links: (u.links || []).slice(0, 3) };
+    }
+  });
+
+  /* -- tabs: a main row (Sessions, Articles), each with its own sub-tabs. The address remembers the
+     open sub-tab: /admin#signups, #forms, #news, #updates --------------------------------------- */
+  var HASH = { "t-signups": "#signups", "t-forms": "#forms", "t-news": "#news", "t-updates": "#updates" };
+  var LOADERS = { "t-signups": loadSignups, "t-forms": loadForms, "t-news": news.load, "t-updates": updates.load };
+  function rowOf(tab) { return Array.prototype.slice.call(tab.closest('[role="tablist"]').querySelectorAll('[role="tab"]')); }
   function openTab(tab, focus) {
-    tabs.forEach(function (t) {
+    rowOf(tab).forEach(function (t) {
       var on = t === tab;
       t.setAttribute("aria-selected", on ? "true" : "false");
       t.tabIndex = on ? 0 : -1;
       $(t.getAttribute("aria-controls")).hidden = !on;
     });
     if (focus) tab.focus();
-    history.replaceState(null, "", location.pathname + location.search + (tab.id === "t-signups" ? "#signups" : tab.id === "t-forms" ? "#forms" : ""));
-    if (tab.id === "t-signups") loadSignups();
-    if (tab.id === "t-forms") loadForms();
+    /* a main tab shows whichever of its sub-tabs was open */
+    var sub = tab.closest(".tabs--main") ? $(tab.getAttribute("aria-controls")).querySelector('.tabs--sub [aria-selected="true"]') : tab;
+    history.replaceState(null, "", location.pathname + location.search + (HASH[sub.id] || ""));
+    if (LOADERS[sub.id]) LOADERS[sub.id]();
   }
-  tabs.forEach(function (t, i) {
+  Array.prototype.slice.call(document.querySelectorAll('[role="tab"]')).forEach(function (t) {
     t.addEventListener("click", function () { openTab(t); });
     t.addEventListener("keydown", function (e) {
-      var next = e.key === "ArrowRight" ? i + 1 : e.key === "ArrowLeft" ? i - 1 : e.key === "Home" ? 0 : e.key === "End" ? tabs.length - 1 : null;
+      var row = rowOf(t), i = row.indexOf(t);
+      var next = e.key === "ArrowRight" ? i + 1 : e.key === "ArrowLeft" ? i - 1 : e.key === "Home" ? 0 : e.key === "End" ? row.length - 1 : null;
       if (next === null) return;
       e.preventDefault();
-      openTab(tabs[(next + tabs.length) % tabs.length], true);
+      openTab(row[(next + row.length) % row.length], true);
     });
   });
 
   update();
   loadSessions();
-  var start = { "#signups": "t-signups", "#forms": "t-forms" }[location.hash];
-  if (start) openTab($(start));
-  if (start !== "t-signups") loadSignups(); /* for the counts on the tabs */
-  if (start !== "t-forms") loadForms();
+  var startTab = null;
+  Object.keys(HASH).forEach(function (id) { if (HASH[id] === location.hash) startTab = $(id); });
+  if (startTab) {
+    openTab($(startTab.closest('[role="tabpanel"]').getAttribute("aria-labelledby")));
+    openTab(startTab);
+  }
+  /* the counts on every sub-tab */
+  Object.keys(LOADERS).forEach(function (id) { if (!startTab || startTab.id !== id) LOADERS[id](); });
 })();

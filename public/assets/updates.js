@@ -1,4 +1,5 @@
-/* Our Updates: YME's own news, read from updates.json and shown in full as cards, newest first.
+/* Our Updates: YME's own news, added on /admin (or, until any are, read from updates.json), shown in
+   full as cards, newest first.
    Each update has its own address (updates.html#its-id) for sharing. Everything is written in as
    text, never as HTML, and links may only go to this site or to https addresses. */
 (function () {
@@ -69,10 +70,27 @@
     return li;
   }
 
-  fetch("updates.json", { headers: { Accept: "application/json" }, cache: "no-cache" })
-    .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
-    .then(function (data) {
-      var updates = (data && Array.isArray(data.updates) ? data.updates : []).filter(function (u) { return u && u.title; });
+  /* a source that is slow or missing gives up after 8 seconds, so the other one still shows */
+  function load(url) {
+    var stop = window.AbortController ? new AbortController() : null;
+    var timer = stop && setTimeout(function () { stop.abort(); }, 8000);
+    return fetch(url, { headers: { Accept: "application/json" }, cache: "no-cache", signal: stop ? stop.signal : undefined })
+      .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .catch(function () { return null; })
+      .then(function (data) { clearTimeout(timer); return data; });
+  }
+
+  /* Updates added on /admin (the database) are used when there are any; otherwise updates.json.
+     In the database the short label above the title is "label"; in updates.json it is "kind". */
+  Promise.all([load("api/posts?page=updates"), load("updates.json")])
+    .then(function (sources) {
+      var posts = sources[0] && Array.isArray(sources[0].posts) ? sources[0].posts : [];
+      var file = sources[1];
+      if (!posts.length && !file) throw new Error("no updates");
+      var updates = posts.length
+        ? posts.map(function (p) { var d = p.data || {}; return { id: "u-" + String(p.id).slice(0, 8), kind: d.label, title: d.title, date: d.date, body: d.body, image: d.image, alt: d.alt, credit: d.credit, links: d.links }; })
+        : (Array.isArray(file.updates) ? file.updates : []);
+      updates = updates.filter(function (u) { return u && u.title; });
       updates.sort(function (a, b) { return String(b.date || "").localeCompare(String(a.date || "")); });
       if (!updates.length) { status.textContent = "Our first updates are on their way. Check back soon."; return; }
       updates.forEach(function (u) { list.appendChild(post(u)); });
