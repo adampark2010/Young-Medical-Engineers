@@ -434,6 +434,7 @@
     function edit(post) {
       form.reset();
       o.fill(post);
+      previews.forEach(function (show) { show(); });
       mode(post);
       note.textContent = "";
       form.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -522,6 +523,68 @@
     var d = iso ? new Date(iso + "T00:00:00") : null;
     return d && !isNaN(d) ? S.MONTHS_LONG[d.getMonth()].slice(0, 3) + " " + d.getDate() + ", " + d.getFullYear() : "";
   }
+  /* Picture fields on the Articles forms. "Upload a Picture" shrinks the file in the browser (longest
+     side 1600px, saved as JPEG) unless it is already small, sends it to /admin/api/images, and puts the
+     address it gets back (api/images/<id>) in the field; the entry keeps it once it is added or saved.
+     A small preview shows any picture stored on this site. */
+  var MAX_SIDE = 1600, KEEP_UNDER = 400000;
+  function shrink(file) {
+    if (file.type === "image/gif" || !window.createImageBitmap) return Promise.resolve(file); /* resizing would stop a GIF moving */
+    return createImageBitmap(file).then(function (img) {
+      var scale = Math.min(1, MAX_SIDE / Math.max(img.width, img.height));
+      if (scale === 1 && file.size <= KEEP_UNDER) return file;
+      var canvas = document.createElement("canvas");
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      var ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#fff"; /* see-through parts turn white, not black */
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      return new Promise(function (done) { canvas.toBlob(function (b) { done(b || file); }, "image/jpeg", 0.85); });
+    });
+  }
+  function uploader(id) {
+    var field = $(id), input = $(id + "-file"), status = $(id + "-file-status"), preview = $(id + "-preview");
+    var button = input.parentNode;
+    function show() {
+      var v = field.value.trim();
+      var ours = /^api\/images\/[a-f\d-]{36}$/i.test(v) || /^assets\/[\w\-.\/]+\.(jpe?g|png|webp|gif)$/i.test(v);
+      preview.hidden = !ours;
+      if (ours) preview.src = "/" + v;
+      else preview.removeAttribute("src");
+    }
+    preview.addEventListener("error", function () { preview.hidden = true; });
+    field.addEventListener("input", show);
+    field.form.addEventListener("reset", function () { setTimeout(function () { show(); status.textContent = ""; }, 0); });
+    input.addEventListener("change", function () {
+      var file = input.files && input.files[0];
+      input.value = "";
+      if (!file) return;
+      if (!/^image\/(jpeg|png|webp|gif)$/.test(file.type)) { status.textContent = "Please choose a JPEG, PNG, WebP or GIF picture."; return; }
+      button.setAttribute("aria-busy", "true");
+      status.textContent = "Uploading…";
+      shrink(file).then(function (blob) {
+        return fetch("/admin/api/images", {
+          method: "POST", credentials: "same-origin",
+          headers: { "Content-Type": blob.type || file.type, Accept: "application/json" }, body: blob
+        });
+      }).then(function (r) {
+        return r.json().catch(function () { return {}; }).then(function (data) {
+          if (!r.ok) throw new Error(data.error || "The upload didn't work (" + r.status + "). Please try again.");
+          return data;
+        });
+      }).then(function (data) {
+        field.value = data.url;
+        field.dispatchEvent(new Event("input", { bubbles: true }));
+        status.textContent = "Uploaded. It's kept when you add or save the entry.";
+      }).catch(function (err) {
+        status.textContent = err.message || "The upload didn't work. Please try again.";
+      }).then(function () { button.removeAttribute("aria-busy"); });
+    });
+    return show;
+  }
+  var previews = [uploader("n-image"), uploader("u-image")];
+
   var news = postEditor({
     prefix: "n", kinds: ["article", "podcast"], noun: ["entry", "entries"], count: "t-news-count",
     addTitle: "Add to In the News", file: "/news.json",

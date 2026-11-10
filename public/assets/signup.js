@@ -64,7 +64,6 @@
         eyebrow.textContent = session.type || "Session";
         title.textContent = session.title;
         lede.textContent = session.description || "Come learn something new about medical engineering.";
-        box.appendChild(S.dateBlock(session));
         box.appendChild(S.meta(session));
         var note = document.createElement("p");
         note.className = "signup__note";

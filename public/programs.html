@@ -20,7 +20,7 @@
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "NGO", "@id": "https://www.medengineers.org/#organization", "name": "Young Medical Engineers", "alternateName": "YME", "url": "https://www.medengineers.org/", "logo": "https://www.medengineers.org/assets/logo-full.png", "email": "youngmedicalengineers@gmail.com", "foundingDate": "2026", "description": "A nonprofit founded and run by high school students that introduces students to medical engineering through free tutoring, keynote talks, design challenges, and hands-on demonstrations.", "sameAs": ["https://www.instagram.com/ym_engineers"], "founder": [{"@type": "Person", "name": "Adam Park"}, {"@type": "Person", "name": "Sohum Kodilkar"}]}, {"@type": "WebPage", "name": "Programs and Upcoming Sessions · Young Medical Engineers", "description": "Free talks from people in medical engineering, hands-on build events, design challenges and one-on-one tutoring. See upcoming sessions and save your spot.", "url": "https://www.medengineers.org/programs.html", "isPartOf": {"@type": "WebSite", "name": "Young Medical Engineers", "url": "https://www.medengineers.org/"}, "about": {"@id": "https://www.medengineers.org/#organization"}}]}</script>
 <script>/* page fade for browsers without view transitions (see style.css) */if(!window.CSSViewTransitionRule&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("pt")</script>
-<link rel="stylesheet" href="assets/style.css?v=2026-11-05d">
+<link rel="stylesheet" href="assets/style.css?v=2026-11-10a">
 <script src="assets/sessions.js" defer></script>
 <script type="speculationrules">{"prefetch":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}]}</script>
 </head>
@@ -127,7 +127,7 @@
 <script>
 /* Young Medical Engineers: shared behaviors.
    Mobile navigation and dropdown menus, home header over the photo,
-   impact counters, scroll reveal, and form delivery. */
+   scroll reveal, and form delivery. */
 (function () {
   "use strict";
 
@@ -198,50 +198,6 @@
   }
 
 
-
-  /* -- impact counters: each number counts up once, when scrolled into view.
-     The target is read from the number written in the page (e.g. "$1,000"), so
-     updating a number means editing only that text. Screen readers get the
-     final number straight away. */
-  var counters = document.querySelectorAll(".stat__num");
-  if (counters.length && !reduceMotion && "IntersectionObserver" in window) {
-    var countUp = function (el) {
-      var m = el.dataset.final.match(/^(\D*)([\d,]+)(.*)$/);
-      var target = parseInt(m[2].replace(/,/g, ""), 10), start = null;
-      var step = function (ts) {
-        if (start === null) start = ts;
-        var p = Math.min((ts - start) / 1200, 1), eased = 1 - Math.pow(1 - p, 3);
-        el.textContent = m[1] + Math.round(target * eased).toLocaleString("en-US") + m[3];
-        if (p < 1) requestAnimationFrame(step);
-      };
-      requestAnimationFrame(step);
-    };
-    var co = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (!en.isIntersecting) return;
-        co.unobserve(en.target);
-        countUp(en.target.querySelector("[aria-hidden]"));
-      });
-    }, { threshold: 0.5 });
-    counters.forEach(function (num) {
-      var text = num.textContent.trim();
-      if (!/^\D*[\d,]+/.test(text)) return;
-      var shown = document.createElement("span");
-      shown.setAttribute("aria-hidden", "true");
-      shown.dataset.final = text;
-      shown.textContent = text;
-      var spoken = document.createElement("span");
-      spoken.className = "sr-only";
-      spoken.textContent = text;
-      num.textContent = "";
-      num.appendChild(spoken);
-      num.appendChild(shown);
-      shown.style.display = "inline-block";
-      shown.style.minWidth = shown.getBoundingClientRect().width + "px"; /* no shifting while it counts */
-      shown.textContent = text.replace(/[\d,]+/, "0");
-      co.observe(num);
-    });
-  }
 
   /* -- reveal on scroll (fade content in once, when scrolled into view) - */
   var reveals = document.querySelectorAll(".section__head, .pillar, .member, .session");

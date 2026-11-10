@@ -93,17 +93,7 @@
     }
     return list;
   }
-  function dateBlock(s) {
-    var p = dateParts(s.date);
-    var date = el("p", "session__date");
-    date.setAttribute("aria-hidden", "true");
-    date.appendChild(el("span", "session__month", MONTHS[p.m - 1]));
-    date.appendChild(el("span", "session__day", String(p.d)));
-    date.appendChild(el("span", "session__weekday", DAYS[p.day.getDay()]));
-    return date;
-  }
-
-  /* One session as a ticket: date, details, and a stub with the Sign Up link.
+  /* One session as a ticket: details, and a stub with the Sign Up link.
      options.heading: the title's tag (default h3); options.cta: false to leave out the stub. */
   function build(s, options) {
     s = normalize(s);
@@ -111,7 +101,6 @@
     options = options || {};
     var li = el("li", "session");
     li.setAttribute("data-date", s.date);
-    li.appendChild(dateBlock(s));
 
     var body = el("div", "session__body");
     var tags = el("p", "session__tags");
@@ -178,7 +167,7 @@
   }
 
   window.YMESessions = {
-    build: build, when: when, times: times, meta: meta, dateBlock: dateBlock, load: load, find: find,
+    build: build, when: when, times: times, meta: meta, load: load, find: find,
     normalize: normalize, where: where, signupUrl: signupUrl, directionsUrl: directionsUrl, MONTHS_LONG: MONTHS_LONG
   };
 

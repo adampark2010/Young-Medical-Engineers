@@ -57,6 +57,17 @@ CREATE TABLE IF NOT EXISTS posts (
 );
 CREATE INDEX IF NOT EXISTS posts_kind ON posts (kind);
 
+-- Pictures uploaded on /admin for the Articles pages (lib/images.js), served at api/images/<id>.
+-- data is the file itself, base64-encoded; the admin page shrinks pictures before uploading.
+CREATE TABLE IF NOT EXISTS images (
+  id UUID PRIMARY KEY,
+  type TEXT NOT NULL CHECK (type IN ('image/jpeg', 'image/png', 'image/webp', 'image/gif')),
+  data TEXT NOT NULL,
+  bytes INTEGER NOT NULL,
+  created_by VARCHAR(40) NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 -- When the website has its own login (db/site-role.sql), let it read, add and delete rows in every
 -- table above, including any a later update adds. Does nothing until that login exists.
 DO $$ BEGIN
@@ -64,5 +75,6 @@ DO $$ BEGIN
     GRANT USAGE ON SCHEMA public TO yme_site;
     GRANT SELECT, INSERT, DELETE ON sessions, signups, form_submissions TO yme_site;
     GRANT SELECT, INSERT, UPDATE, DELETE ON posts TO yme_site; -- posts can be edited
+    GRANT SELECT, INSERT, DELETE ON images TO yme_site;
   END IF;
 END $$;

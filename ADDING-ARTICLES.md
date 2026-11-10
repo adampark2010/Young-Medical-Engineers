@@ -12,9 +12,11 @@ has been added on the admin page, the website shows only what is listed there,
 and the two files below are only a backup (they are also what GitHub Pages shows,
 since it has no database).
 
-Pictures are given as a link (`https://...`) or as a file already in the site,
-such as `assets/updates/photo.jpg`. Uploading pictures from the admin page is not
-built in.
+To add a picture, click **Upload a Picture** (or **Upload a Photo**) under the
+picture field and choose a JPEG, PNG, WebP or GIF. The admin page shrinks large
+photos before uploading, fills in the field, and shows a small preview; the picture
+is kept once you add or save the entry. You can also paste a link (`https://...`)
+or a file already in the site, such as `assets/updates/photo.jpg`.
 
 The rest of this file explains the two files, for editing them by hand.
 

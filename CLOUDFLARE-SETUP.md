@@ -37,7 +37,7 @@ Everything below can be recovered through `youngmedicalengineers@gmail.com`, so 
 ### Step 3. Create the Neon database
 
 1. In Neon, create a project named `yme-website`. For the region choose **AWS US East 2 (Ohio)**, the closest to Illinois. The free plan is enough.
-2. Open **SQL Editor**. Paste in all of [`db/schema.sql`](db/schema.sql) and click **Run**. It creates four tables: `sessions`, `signups`, `form_submissions` and `posts` (the Articles pages). Run it again after any update that adds a table. Running it again later is safe; it never erases anything.
+2. Open **SQL Editor**. Paste in all of [`db/schema.sql`](db/schema.sql) and click **Run**. It creates five tables: `sessions`, `signups`, `form_submissions`, `posts` (the Articles pages) and `images` (pictures uploaded for them). Run it again after any update that adds a table. Running it again later is safe; it never erases anything.
 3. Make a password for the website's own database login: **24 or more random letters and numbers, no symbols**. A password manager can generate one. Save it in the board's password manager.
 4. Open [`db/site-role.sql`](db/site-role.sql), paste it into a new SQL Editor tab, replace `REPLACE-WITH-A-LONG-RANDOM-PASSWORD` on line 6 with your password, and click **Run**. This makes a login called `yme_site` that can only read, add and delete rows: it cannot change or delete tables, even if its password ever leaked. (If you forget to replace the password, it stops and tells you.)
 5. Click **Connect** on the project dashboard and copy the connection string. It looks like this:

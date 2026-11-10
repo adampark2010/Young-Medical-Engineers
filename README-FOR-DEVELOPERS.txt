@@ -72,6 +72,8 @@ worker.js         The Cloudflare Worker. It answers these addresses and leaves e
                   /api/posts: the In the News and Our Updates entries; anyone reads
                   them (GET ?page=news or ?page=updates), signed-in admins add, edit
                   (POST with the same id) and delete them
+                  /api/images/<id>: a picture uploaded on /admin (anyone can load it);
+                  signed-in admins upload with POST /admin/api/images (images.js)
                   /admin: checks the admin sign-in, then shows the session manager
                   /admin/api/...: the same three, for the admin page. Admin requests
                   go here so Cloudflare Access can guard all of /admin while visitors'
@@ -81,10 +83,10 @@ worker.js         The Cloudflare Worker. It answers these addresses and leaves e
 lib/              The code behind it: sign-in and the delete password (auth.js),
                   Cloudflare Access tokens (access.js), request helpers (http.js),
                   sessions (sessions.js), sign-ups (signups.js), form submissions
-                  (forms.js, which also lists each form's fields), Articles posts (posts.js), the /admin page
+                  (forms.js, which also lists each form's fields), Articles posts (posts.js), uploaded pictures (images.js), the /admin page
                   (admin.js, admin-page.js), the Neon database (database.js) and the
                   local SQLite one (sqlite-store.js)
-db/schema.sql     Creates the sessions, signups, form_submissions and posts tables; run it in
+db/schema.sql     Creates the sessions, signups, form_submissions, posts and images tables; run it in
                   Neon (again after any update that adds a table; it never erases
                   anything)
 db/site-role.sql  Creates the website's own database login (yme_site), which can read,

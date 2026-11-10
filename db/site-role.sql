@@ -19,4 +19,5 @@ GRANT SELECT, INSERT, DELETE ON sessions, signups, form_submissions TO yme_site;
 -- the Articles pages' posts can also be edited (db/schema.sql gives this too, once posts exists)
 DO $$ BEGIN
   IF to_regclass('public.posts') IS NOT NULL THEN GRANT SELECT, INSERT, UPDATE, DELETE ON posts TO yme_site; END IF;
+  IF to_regclass('public.images') IS NOT NULL THEN GRANT SELECT, INSERT, DELETE ON images TO yme_site; END IF;
 END $$;
